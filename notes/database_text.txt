@@ -1,0 +1,683 @@
+UNHack 2026
+Four Canadian Communities
+Flood Infrastructure Research Database
+Updated sections 1–5 | 20 research fields per community | Revised chart and diagram data | November
+7, 2026
+Project scope
+This updated database consolidates research about four Canadian First Nations communities with reported
+flood-related transportation disruptions. It excludes the previously removed U.S. community and the B.C. Highway
+8 reconstruction case.
+Kashechewan First Nation - Ontario
+English River First Nation / Patuanak - Saskatchewan
+Minegoziibe Anishinabe - Manitoba
+Potlotek First Nation - Nova Scotia
+Evidence note. Reported observations, preliminary hypotheses and proposed design concepts are distinguished throughout.
+“Not verified” does not establish that no permanent repair exists. All location-specific engineering dimensions and performance
+claims require confirmation before design.
+Evidence verification and supporting reporting
+Kashechewan: the May 1, 2025 road-flooding timestamp is supported by contemporaneous community reporting. The
+approximately 2,000 figure refers to the community population in 2025, not people confirmed stranded on the road. This
+database does not chart the conflicting evacuation-count estimates in the submitted notes.
+Minegoziibe: do not use the Manitoba $15.9 million figure as a Minegoziibe allocation. The October 21, 2026 Manitoba release
+explicitly identifies Peguis First Nation and Fisher River Cree Nation.
+Potlotek: the September 14, 2026 local report confirms the affected road section remained closed, that water/wastewater utilities
+were under monitoring, and that an alternate route was advised. No opening timestamp is documented.
+Supporting reporting: Kashechewan (May 1, 2025) | English River (May 5, 2026) | Minegoziibe (July 2, 2026) | Potlotek (Sep. 14,
+2026) | Manitoba funding clarification.
+UNHack 2026  |  Flood Infrastructure Research Database
+Page 1 of 12
+
+
+=====PAGE=====
+Section 1 | Kashechewan First Nation, Ontario
+Main engineering concern: Repeated spring breakup and ice-jam flooding threaten critical transportation access, including the
+only road to the airport.
+#
+Research field
+Consolidated information
+1
+Exact damaged road location
+Kashechewan airport access road between the settlement and Kashechewan Airport. The
+route flooded on May 1, 2025; the exact chainage, intersection and GPS coordinates are
+unverified. Obtain road inventory, incident maps and satellite imagery.
+2
+Flood date and duration
+The airport road was reported compromised and beginning to flood at about 7:13 a.m. on
+May 1, 2025. Its reopening date/time and total impassability duration have not been
+verified; request incident/airport records.
+3
+Rainfall and peak flow
+This was a spring river-breakup/ice-jam flood, not an established rainfall-runoff event.
+Obtain Albany River stage, discharge, ice-jam chronology and local high-water marks; no
+verified road-specific peak stage/flow is available.
+4
+Road elevation and dimensions
+Unknown. Obtain DEM/LiDAR and field/as-built measurements of road crown elevation,
+width, embankment height, distance to river and 2025 high-water level.
+5
+Culvert or bridge characteristics
+Unknown whether the affected reach uses culverts, a causeway or a bridge. Identify all
+drainage crossings and obtain dimensions, invert levels and hydraulic capacities before
+proposing replacements.
+6
+Damage type and probable cause
+Inundation during elevated Albany River water levels associated with spring breakup and
+reported ice jamming. Whether embankment erosion or local drainage capacity
+contributed to failure is unverified; examine high-water marks and road condition.
+7
+People and essential services
+affected
+Approximately 2,000 community residents were reported in May 2025 (population
+estimate, not road-specific exposed count). Airport access failed and helicopter transfers
+via Fort Albany were required. Conflicting evacuation counts in supplied notes are not
+chart-ready.
+8
+Alternative access and detour
+time
+No year-round outside road: the community ordinarily relies on air access and seasonal
+winter-road connectivity. Helicopters ferried evacuees to Fort Albany after road
+inundation. Obtain flight capacities, weather limits and transfer times.
+9
+Existing repairs and effectiveness
+No confirmed completed permanent protection of the airport-access road. Request status
+of dike/road/drainage and longer-term community relocation work from the Nation and
+appropriate governments.
+10
+Proposed design target and
+constraints
+Assess raising/protecting airport access and preserving emergency aviation during
+ice-jam high-water conditions. Determine design stage and freeboard; evaluate alongside
+the Nation’s relocation priorities and environmental/remote-logistics constraints.
+11
+Historical flood frequency
+Annual spring flood-related evacuations have been reported for more than a decade; this
+is a reported pattern, not proof the airport road itself closes annually. Compile event
+dates and closure/evacuation histories by cause.
+12
+Floodwater depth and velocity
+No verified values for the airport access road.
+UNHack 2026  |  Flood Infrastructure Research Database
+Page 2 of 12
+
+
+=====PAGE=====
+#
+Research field
+Consolidated information
+13
+Exposed population
+About 2,000 residents (reported for 2025), but the exact number of people directly
+dependent on the airport-access road, plus students and households, remains to be
+counted.
+14
+Educational disruption
+No verified number of missed school days or students affected by the airport-road
+flooding.
+15
+Emergency response impact
+Airport-road access became unavailable, triggering helicopter evacuation transfers via
+Fort Albany. Obtain airlift counts, flight timing, medical-transport delays and emergency
+response logs.
+16
+Economic losses
+No verified road-specific repair costs, transportation losses or emergency logistics
+expenditures.
+17
+Watershed and terrain
+Low-lying Albany River floodplain. The supplied research identifies a reported ice jam in
+the north channel; verify its exact location and backwater effects with
+ice-breakup/hydrometric records. Map stage, flood pathways and terrain.
+18
+Future flood projections
+No climate-adjusted site-specific flood level established. Examine spring breakup, ice-jam
+stage extremes and changing winter/ice conditions; rainfall IDF curves alone are
+insufficient.
+19
+Road ownership and project
+status
+Responsible road authority, completed works, funded works and outstanding deficiencies
+require confirmation with the First Nation and relevant agencies.
+20
+Community priorities and
+feasibility
+Priorities include access to education/medical care, reliable evacuation and the Nation’s
+repeated calls for relocation. Confirm which interim road works are desired through
+community-led engagement.
+Research status: Stronger baseline: about 2,000 residents (2025 report), more than a decade of repeated spring evacuations,
+and May 1, 2025 airport-road flooding around 7:13 a.m. Engineering data and closure duration remain missing.
+UNHack 2026  |  Flood Infrastructure Research Database
+Page 3 of 12
+
+
+=====PAGE=====
+Section 2 | English River First Nation / Patuanak, Saskatchewan
+Main engineering concern: Highway 918 is a critical road connection with multiple flood-related washouts.
+#
+Research field
+Consolidated information
+1
+Exact damaged road location
+Highway 918 north of Highway 165 toward Patuanak. Reported damaged/closed points at
+approximately 17, 29 and 40 km north of Highway 165; Saskatchewan legislative debate
+cited five washout locations. Survey and confirm each chainage.
+2
+Flood date and duration
+Highway 918 closed from May 1, 2026; cautious access reportedly resumed around May
+7 (about six days). Exact opening timestamps and whether full service returned then are
+unknown.
+3
+Rainfall and peak flow
+Rapid spring snowmelt and high water were reported. No verified Highway 918
+catchment peak discharge or site-specific rainfall value.
+4
+Road elevation and dimensions
+No surveyed geometry available. The road base was described as approximately 50
+years old. Obtain as-builts, LiDAR/DEM, pavement and embankment cross-sections at
+each washout.
+5
+Culvert or bridge characteristics
+Some culverts were described as compressed/poor, and emergency culverts were
+installed. Obtain diameters, lengths, inverts, grades, inspection ratings and hydraulic
+capacity for each failed crossing.
+6
+Damage type and probable cause
+Multiple washouts and overtopping during rapid snowmelt and high water. Distinguish
+culvert insufficiency, blockage, scour, saturated embankment failure and potential
+channel changes at individual sites.
+7
+People and essential services
+affected
+About 500 residents in Patuanak were reported isolated because Highway 918 was the
+only road link. Confirm actual households, school enrolment and daily traffic before
+charting exposed road users.
+8
+Alternative access and detour
+time
+Highway 918 was described as Patuanak’s only road connection, with no practical road
+detour during the event. Examine seasonal boat/ice-road/air alternatives without
+assuming availability.
+9
+Existing repairs and effectiveness
+Ministry crews installed emergency culverts and stockpiled gravel, restoring cautious
+drivability. The permanent scope, repair costs, completion and post-repair condition are
+not verified.
+10
+Proposed design target and
+constraints
+Assess flood-resilient culvert crossings, reconstructed embankments, scour protection
+and selective roadway raising. Need design return period/discharge, freeboard, local
+maintenance plan and a construction traffic strategy.
+11
+Historical flood frequency
+A complete historical count of road-damaging floods is unavailable. The May 2026 flood
+is documented.
+12
+Floodwater depth and velocity
+No numerical values reported at individual washout sites.
+13
+Exposed population
+Approximately 500 residents reportedly relied on the affected highway. Exact households
+and school-aged population require verification.
+14
+Educational disruption
+No reliable number of missed school days, affected students or cancelled transportation
+services.
+UNHack 2026  |  Flood Infrastructure Research Database
+Page 4 of 12
+
+
+=====PAGE=====
+#
+Research field
+Consolidated information
+15
+Emergency response impact
+Road isolation created emergency/medical supply and evacuation risk. Obtain
+emergency dispatch records and response-time delays; do not assume numerical delay
+values.
+16
+Economic losses
+No verified road-specific repair budget, supply-disruption cost or total community
+economic loss.
+17
+Watershed and terrain
+Specific drainage areas, crossing slopes, ground elevations and contributing watersheds
+are not yet mapped in the research.
+18
+Future flood projections
+No verified climate-adjusted discharge or flood-depth projections for the identified
+Highway 918 crossings.
+19
+Road ownership and project
+status
+Saskatchewan Ministry of Highways performed emergency drainage and gravel work.
+Permanent repair scope and completion status need current confirmation.
+20
+Community priorities and
+feasibility
+Protect year-round road access for supplies and emergency transport. Confirm locally
+preferred interventions and seasonal non-road alternatives through direct First Nation
+consultation.
+Research status: Strong candidate for a road-access engineering solution because several damage locations, a documented
+event and an approximate affected population are available.
+UNHack 2026  |  Flood Infrastructure Research Database
+Page 5 of 12
+
+
+=====PAGE=====
+Section 3 | Minegoziibe Anishinabe, Manitoba
+Main engineering concern: Regional flooding damaged road infrastructure and compromised access in multiple directions.
+#
+Research field
+Consolidated information
+1
+Exact damaged road location
+Highway 20 toward Camperville and regional routes toward Swan River, with regional
+washouts. Exact road damage coordinates require Manitoba 511/closure bulletins and
+maintenance inspection reports.
+2
+Flood date and duration
+State of emergency declared in early July 2026. Expected restoration of access to homes
+was 3–4 days, NOT an established start-to-end road closure duration; obtain Manitoba
+511 and community update records.
+3
+Rainfall and peak flow
+Flooding occurred during the 2026 Manitoba Parkland flood event. No site-specific rainfall
+amount or peak discharge identified.
+4
+Road elevation and dimensions
+Not available. Obtain road crown/embankment profile, carriageway width, shoulders and
+adjacent floodplain elevations.
+5
+Culvert or bridge characteristics
+Washed-out infrastructure documented, but individual culverts/bridges and dimensions
+unknown. Obtain provincial bridge/culvert inventory and inspection reports.
+6
+Damage type and probable cause
+Road washouts and damaged infrastructure during regional flooding. Forensic site review
+must distinguish runoff/culvert overload, overtopping, embankment scour and slope
+instability.
+7
+People and essential services
+affected
+Community access and connection to regional emergency services were cut off. The
+affected resident and household counts are not established; collect First Nation and
+provincial mobility data.
+8
+Alternative access and detour
+time
+Both main travel directions were reported disrupted. Map any viable detour and measure
+distance, travel time, load restrictions and ambulance suitability.
+9
+Existing repairs and effectiveness
+Emergency flood response and recovery were reported, but site-specific completed
+repairs, costs and inspection outcomes are not verified. Do not attribute the province’s
+$15.9m Peguis/Fisher River funding to Minegoziibe.
+10
+Proposed design target and
+constraints
+Investigate raising critical road sections, improving drainage and culverts, protecting
+embankments and improving emergency access redundancy. Constraints include cost,
+terrain and construction logistics.
+11
+Historical flood frequency
+Complete community-specific flood-frequency record unavailable. Additional historical
+flood events need to be compiled.
+12
+Floodwater depth and velocity
+No verified numerical values for affected roads.
+13
+Exposed population
+Exact number of households and residents dependent on the affected routes not
+established in the research.
+14
+Educational disruption
+No published figure for students affected, school days missed or school transportation
+disruption.
+15
+Emergency response impact
+Emergency-service access was reportedly interrupted. Ambulance response time and
+evacuation delays not quantified.
+UNHack 2026  |  Flood Infrastructure Research Database
+Page 6 of 12
+
+
+=====PAGE=====
+#
+Research field
+Consolidated information
+16
+Economic losses
+No Minegoziibe-specific economic loss/repair cost verified. The $15.9m Manitoba
+announcement specifically relates to Peguis First Nation and Fisher River Cree Nation,
+not Minegoziibe.
+17
+Watershed and terrain
+Located in Manitoba’s Parkland region. Road-specific catchment boundaries, drainage
+slopes and flood elevations need investigation.
+18
+Future flood projections
+No verified site-specific future flood depth, rainfall intensity or design flow.
+19
+Road ownership and project
+status
+Highway 20 is provincial. Obtain Manitoba Transportation repair scopes, closure logs and
+completed-project records for the Minegoziibe corridor; long-term protection remains
+unverified.
+20
+Community priorities and
+feasibility
+Restoring dependable access to homes, medical services, essential supplies and
+emergency evacuation. Community-approved long-term interventions need confirmation.
+Research status: Strong community-access case, but its engineering analysis is limited by missing road failure coordinates,
+closure records and hydraulic data.
+UNHack 2026  |  Flood Infrastructure Research Database
+Page 7 of 12
+
+
+=====PAGE=====
+Section 4 | Potlotek First Nation, Nova Scotia
+Main engineering concern: Embankment damage, erosion and potentially inadequate drainage capacity along Chapel Island
+Road.
+#
+Research field
+Consolidated information
+1
+Exact damaged road location
+Chapel Island Road / Sitmuk Awti near Matle’n’s Brook in Potlotek, Cape Breton. Exact
+damaged chainage and embankment extents require the local engineering assessment;
+route leads toward Mniku/Chapel Island.
+2
+Flood date and duration
+September 14, 2026 report confirms the affected Chapel Island Road section was
+CLOSED due to roadway and embankment damage. Start/end timestamps and total
+closure duration remain unknown.
+3
+Rainfall and peak flow
+Continued rainfall was reported, but no verified Matle’n’s Brook rainfall intensity/total,
+recurrence interval or peak discharge. Obtain local ECCC observations and catchment
+modelling.
+4
+Road elevation and dimensions
+Not reported. Survey the road crown, embankment height and width, slope, local ground
+and water levels near the affected culverts.
+5
+Culvert or bridge characteristics
+Engineering assessment found existing culverts MAY be unable to convey the observed
+flow. Obtain dimensions, inverts, slopes, blockage condition and capacity; insufficiency is
+not yet proven.
+6
+Damage type and probable cause
+Documented roadway/embankment damage and erosion from flooding. Test whether
+culvert backup, overland runoff or tidal/coastal interaction drove the failure; inadequate
+drainage is a hypothesis.
+7
+People and essential services
+affected
+Closure affected travel toward culturally important Mniku/Chapel Island; the adjacent
+area also contains critical underground community water/wastewater lines under
+monitoring. People and service interruption counts unknown.
+8
+Alternative access and detour
+time
+Officials instructed road users to take an alternate route; the detour distance, weather
+reliability, road capacity and ambulance suitability are unverified. The community must
+not be described as fully isolated.
+9
+Existing repairs and effectiveness
+As of Sept. 14, 2026 the Nation sought emergency support and funding for permanent
+engineered roadway/embankment stabilization, culvert improvements and drainage; no
+verified completed permanent repair.
+10
+Proposed design target and
+constraints
+Assess appropriately sized culverts, embankment reconstruction, erosion protection, and
+water/wastewater utility safeguarding; apply future-rainfall design and culturally
+sensitive construction review.
+11
+Historical flood frequency
+No complete historical flood record for Chapel Island Road or Matle’n’s Brook.
+12
+Floodwater depth and velocity
+No verified measurements.
+13
+Exposed population
+Number of residents, households, students and visitors dependent on the damaged road
+not quantified.
+14
+Educational disruption
+No reliable number of students or school days affected.
+UNHack 2026  |  Flood Infrastructure Research Database
+Page 8 of 12
+
+
+=====PAGE=====
+#
+Research field
+Consolidated information
+15
+Emergency response impact
+Road closure potentially affected emergency transport and critical buried
+water/wastewater utilities, but no recorded service interruption or response-time delays
+were found.
+16
+Economic losses
+No verified damage repair costs, emergency response expenditures or road-specific
+economic losses.
+17
+Watershed and terrain
+Site lies near Matle’n’s Brook and coastal Mniku/Chapel Island access. Catchment
+area/slope and any freshwater-coastal backwater interaction require analysis.
+18
+Future flood projections
+No verified climate-adjusted rainfall intensity, flood elevation or runoff projections for this
+site.
+19
+Road ownership and project
+status
+Permanent stabilization and drainage funding was being sought. Responsible authority,
+final engineering design and current construction status require confirmation.
+20
+Community priorities and
+feasibility
+Maintain safe transportation while protecting Mniku/Chapel Island’s cultural,
+archaeological and environmental significance. Community-directed engagement is
+essential.
+Research status: Strong targeted infrastructure case, particularly for evaluating culvert capacity and embankment stabilization.
+Source links supplied in prior research: September 2026 local reporting and federal project information.
+UNHack 2026  |  Flood Infrastructure Research Database
+Page 9 of 12
+
+
+=====PAGE=====
+Section 5 | Consolidated chart and diagram database
+Available data and evidence gaps for the UNHack pitch. Values marked unknown must not be shown as zero. Forecast or
+hypothetical performance must be distinguished from measured outcomes.
+Chart 1 - Road closure duration
+Community
+Event date
+Duration
+Data status
+Kashechewan
+May 1, 2025
+~7:13 a.m.
+Unknown
+Airport road flooded; no reopening timestamp
+English River
+May 1–7, 2026
+Approximately 6 days
+Reported time until cautious access; precise hours
+unverified
+Minegoziibe
+Early July 2026
+Unknown
+3–4 days was an expected restoration period, not a
+confirmed full closure
+Potlotek
+September 14,
+2026
+Unknown
+Flood damage documented; closure duration not
+established
+Only English River currently provides a usable approximate disruption duration. Do not represent missing durations as zero.
+Chart 2 - Population and essential services affected
+Community
+Affected population
+Transportation importance
+Kashechewan
+About 2,000 total (2025); directly
+exposed unknown
+Airport access, evacuation, medical transportation
+English River
+About 500 residents reported
+isolated
+Sole road link, emergency services, supplies
+Minegoziibe
+Unknown
+Community access to homes and surrounding areas
+Potlotek
+Unknown
+Local transportation and access to culturally significant sites
+Obtain consistent estimates of residents or households directly dependent on each damaged segment. Total community
+population is not necessarily the exposed population.
+Chart 3 - Flood drivers and required hydrologic measurements
+Community
+Primary flood driver
+Hydrologic measurement to research
+Verified site
+value
+Kashechewan
+Spring breakup / reported ice
+jam
+Albany River peak stage, ice-jam profile, discharge
+Unknown
+English River
+Rapid snowmelt / high water
+Peak discharge, flood level, snowmelt runoff
+Unknown
+Minegoziibe
+Rainfall and regional flooding
+Site storm total/intensity and peak flow
+Unknown
+Potlotek
+Rainfall / local drainage flooding
+Matle’n’s Brook flow and storm intensity
+Unknown
+UNHack 2026  |  Flood Infrastructure Research Database
+Page 10 of 12
+
+
+=====PAGE=====
+For Kashechewan, use Albany River stage, ice-jam history and flood levels, NOT rainfall IDF as a substitute. For rainfall-driven
+cases, use local station records, IDF curves and climate scenarios. Do not label distant station measurements as site
+measurements.
+Chart 4 - Damage and repair comparison
+Community
+Documented damage
+Repair information
+Permanent resilience
+Kashechewan
+Ice-breakup flood / airport road
+inundation
+Specific road/dike repairs unverified
+Unverified
+English River
+Multiple washouts and
+overtopping
+Emergency culvert and gravel work
+Unverified
+Minegoziibe
+Washed-out regional roads
+Emergency recovery; no allocated site
+budget
+Unverified
+Potlotek
+Road/embankment damage;
+utility exposure
+Permanent repair funds sought
+Unverified
+A categorical comparison of damage types is possible. A numerical comparison of repair costs is not yet supported.
+Chart 5 - Before and after a proposed engineering solution
+Metric
+Before upgrade
+After upgrade
+Information needed
+Flood depth over road (m)
+Existing/design-event flood
+depth
+Modelled depth after
+improvements
+River stage or runoff hydraulic
+model
+Road closure (days)
+Historical or predicted
+disruption
+Predicted disruption after
+upgrade
+Event records and access model
+Peak water level / flow
+River stage or discharge
+Modelled conveyance/flood
+level
+Ice-jam stage or catchment
+hydraulic model
+Culvert capacity (m³/s)
+Existing structure capacity
+Proposed structure capacity
+Dimensions, slopes and hydraulic
+modelling
+Repair costs (CAD)
+Documented or expected
+damage cost
+Expected maintenance/repair
+cost
+Cost data and lifecycle analysis
+Access reliability (%)
+Baseline service availability
+Modelled availability
+Event frequency and transport
+reliability model
+People affected
+Exposed population
+Expected reduction in
+disruption
+Community and road-access data
+All future-performance figures must be labelled modelled projections, not verified results.
+UNHack 2026  |  Flood Infrastructure Research Database
+Page 11 of 12
+
+
+=====PAGE=====
+Chart 6 - Flood event timeline
+ 01 MAY 2025
+Kashechewan
+Airport road flooding reported ~7:13 a.m.
+01-07 MAY 2026
+English River
+Highway 918 washouts; ~6 days until cautious access
+EARLY JUL 2026
+Minegoziibe
+Regional flooding and road-access disruption
+14 SEP 2026
+Potlotek
+Chapel Island Road flooding and embankment damage
+This is a timeline of selected reported events, not a trend or a record of closure durations. Kashechewan airport-road flooding was
+reported at about 7:13 a.m. on May 1, 2025.
+Diagram 7 - Engineering road and culvert cross-section
+For each community, a comparative cross-section should ideally include:
+• Road elevation, crown width and embankment height (m).
+ • Existing and proposed culvert diameter/span, length and invert elevations (m).
+ • Upstream and downstream water levels (m), including ice-jam high-water stage where relevant.
+ • Peak design flow (m³/s) and flow velocity (m/s); account for backwater and ice jams where relevant.
+ • Soil properties, slope stability and scour depth.
+ • Proposed freeboard, erosion protection and drainage improvements.
+ 
+Conceptual road and culvert cross-section
+Road elevation: TBD
+Flood level: TBD
+Culvert capacity: TBD
+All dimensions schematic; not to scale
+Until field surveys and hydraulic analysis are available, show cross-sections only as conceptual schematics. Mark all dimensions
+"TBD - requires survey/as-built review".
+UNHack 2026  |  Flood Infrastructure Research Database
+Page 12 of 12

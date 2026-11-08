@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Keepway</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<style>
+:root{--bg:#14232B;--ink:#F3F5F2;--muted:#B9C7CC;--card:#1E3440;--amber:#F2A20C}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "IBM Plex Sans",system-ui,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:48px max(16px,env(safe-area-inset-left,0px)) 64px;display:grid;gap:28px}
+.bar{height:8px;background:var(--amber);position:fixed;top:0;left:0;right:0}
+h1{font:700 clamp(56px,10vw,96px)/1 "Barlow Condensed",Arial Narrow,sans-serif;margin:0;letter-spacing:.02em}
+.lede{font-size:20px;max-width:62ch;margin:0}
+.muted{color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+a.card{display:grid;gap:6px;background:var(--card);border-radius:12px;padding:20px;color:var(--ink);text-decoration:none;border:2px solid transparent}
+a.card:hover,a.card:focus-visible{border-color:var(--amber);outline:none}
+.card b{font:600 26px "Barlow Condensed",Arial Narrow,sans-serif}
+.tag{font:600 12px ui-monospace,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)}
+ul{margin:0;padding-left:20px}
+a{color:var(--amber)}
+</style>
+</head>
+<body>
+<div class="bar"></div>
+<div class="wrap">
+  <div class="tag">UNHack 2026</div>
+  <h1>KEEPWAY</h1>
+  <p class="lede">Route, cost and schedule software for road builders that designs roads to stay open in floods, built from an engineering study of four First Nations whose only road keeps washing out.</p>
+  <div class="cards">
+    <a class="card" href="planner/"><span class="tag">Start here</span><b>Keepway Planner</b><span class="muted">Best and alternative routes on a flood map, with cost and completion date. Try Scenarios 1, 2 and 3.</span></a>
+    <a class="card" href="product/"><span class="tag">Tool</span><b>Crossing screener</b><span class="muted">Enter failing road crossings and get the cheapest fix, priced and ranked into a capital plan.</span></a>
+    <a class="card" href="prototype/"><span class="tag">Tool</span><b>Flood simulator</b><span class="muted">Push a flood up and watch today's road close while the fixed crossing stays open.</span></a>
+  </div>
+  <div>
+    <h2 style="font:600 28px 'Barlow Condensed',sans-serif;margin:0 0 8px">Engineering study (files)</h2>
+    <ul>
+      <li><a href="Pitch_Summary.md">Pitch summary</a> · <a href="README.md">Study README and decision tables</a> · <a href="SUBMISSION.md">Submission text</a></li>
+      <li><a href="Construction_Cost_Workbook.xlsx">Construction cost workbook (.xlsx)</a> · <a href="Implementation_Timeline_Workbook.xlsx">Implementation timeline workbook (.xlsx)</a></li>
+      <li><a href="Graph1_Flood_vs_Road_Elevation.png">Graph 1: flood vs road elevation</a> · <a href="Graph2_Construction_Lifecycle_Costs.png">Graph 2: construction and lifecycle costs</a></li>
+      <li><a href="Source_Register.csv">Source register (217 entries, .csv)</a> · <a href="notes/">Research notes</a></li>
+    </ul>
+  </div>
+  <p class="muted" style="font-size:14px">Working prototype. The Planner runs on generated demo terrain and accepts real elevation data (ESRI ASCII grid). Costs are screening estimates in 2026 CAD (−50% / +100%), not quotes or stamped designs. Saving projects needs the hosted product; here, edits stay in your browser.</p>
+</div>
+</body>
+</html>

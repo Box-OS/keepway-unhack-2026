@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body>
+<title>Keepway</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: app shell — product bar, three views (capital plan table, crossing workbench with live cross-section, how it works & plans). */
+:root{
+  --bg:#f3f5f4; --panel:#ffffff; --ink:#17201f; --muted:#5b6866; --line:#d5dcda; --hover:#eef3f2;
+  --water:#3f7fb3; --water-deep:#2a5f8c; --soil:#b49a6a; --soil-dark:#8a7448; --gravel:#6f6a60;
+  --sign:#f2a20c; --sign-ink:#1a1407; --open:#1f8a55; --closed:#c2412b; --accent:#0f6e70; --accent-ink:#ffffff; --sky:#e7eef1;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111816; --panel:#18211f; --ink:#e6ecea; --muted:#9aa8a5; --line:#2c3836; --hover:#1f2a28;
+  --water:#4b8fc6; --water-deep:#7fb2dd; --soil:#8f7a52; --soil-dark:#6e5d3c; --gravel:#8a8478;
+  --sign:#f2a20c; --sign-ink:#1a1407; --open:#3fb77a; --closed:#e0644c; --accent:#3fb0b2; --accent-ink:#0b1514; --sky:#1b2624; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111816; --panel:#18211f; --ink:#e6ecea; --muted:#9aa8a5; --line:#2c3836; --hover:#1f2a28;
+  --water:#4b8fc6; --water-deep:#7fb2dd; --soil:#8f7a52; --soil-dark:#6e5d3c; --gravel:#8a8478;
+  --sign:#f2a20c; --sign-ink:#1a1407; --open:#3fb77a; --closed:#e0644c; --accent:#3fb0b2; --accent-ink:#0b1514; --sky:#1b2624; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+.wrap{max-width:1240px;margin:0 auto;padding-block:16px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:16px}
+.bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:12px}
+.brand{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.brand b{font-family:var(--display);font-weight:700;font-size:34px;letter-spacing:.02em;line-height:1}
+.brand span{color:var(--muted);font-size:14px}
+nav{display:flex;gap:6px;flex-wrap:wrap}
+.nav{font:600 14px var(--body);border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:7px 12px;border-radius:6px;cursor:pointer}
+.nav[aria-current="page"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button{font-family:var(--body)}
+.btn{font:600 14px var(--body);border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);padding:8px 14px;border-radius:6px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.danger{background:transparent;color:var(--closed);border-color:var(--closed)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.note{font-size:13px;color:var(--muted)}
+.banner{background:color-mix(in srgb,var(--sign) 18%,var(--panel));border:1px solid color-mix(in srgb,var(--sign) 50%,var(--line));border-radius:6px;padding:8px 12px;font-size:14px}
+h2{font-family:var(--display);font-weight:600;font-size:30px;margin:0;line-height:1.1;text-wrap:balance}
+h3{font-family:var(--display);font-weight:600;font-size:22px;margin:0}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:grid;gap:2px}
+.tile .k{font:500 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tile .v{font-family:var(--display);font-weight:600;font-size:32px;line-height:1.05;font-variant-numeric:tabular-nums}
+.tile .s{font-size:13px;color:var(--muted)}
+.tablebox{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:860px;font-size:14px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 12px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:var(--panel);position:sticky;top:0}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13px}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--hover)}
+.pill{display:inline-block;font:600 11px var(--mono);letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:3px;white-space:nowrap}
+.pill.closed{background:var(--sign);color:var(--sign-ink)}
+.pill.open{background:color-mix(in srgb,var(--open) 20%,transparent);color:var(--open)}
+.pill.warn{background:color-mix(in srgb,var(--closed) 16%,transparent);color:var(--closed)}
+.rank{font-family:var(--display);font-weight:700;font-size:20px}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.toolbar .left{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+select,input{font:14px var(--body);color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:6px 8px;width:100%}
+.work{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:16px;align-items:start}
+.form{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:12px}
+fieldset{border:0;padding:0;margin:0;display:grid;gap:8px}
+legend{font:500 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+label{display:grid;gap:3px;font-size:13px;color:var(--muted)}
+label > span.u{font-family:var(--mono);font-size:11px}
+.right{display:grid;gap:14px;min-width:0}
+.control{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:grid;gap:8px}
+.control-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:baseline}
+.readout{font:500 18px var(--mono);font-variant-numeric:tabular-nums}
+input[type=range]{padding:0;border:0;accent-color:var(--water)}
+.presets{display:flex;gap:6px;flex-wrap:wrap}
+.preset{font:500 13px var(--body);border:1px solid var(--line);background:transparent;color:var(--ink);padding:4px 10px;border-radius:999px;cursor:pointer}
+.sections{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sec{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px;display:grid;gap:6px;min-width:0}
+.sec-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.sec-head h4{margin:0;font:600 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.sign{font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:.04em;padding:2px 10px;border-radius:4px;text-transform:uppercase}
+.sign.open{background:var(--open);color:#fff}
+.sign.closed{background:var(--sign);color:var(--sign-ink);border:2px solid var(--sign-ink)}
+.sec svg{width:100%;height:auto;display:block}
+.metric{font:500 13px var(--mono);font-variant-numeric:tabular-nums}
+.result{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:10px}
+.result .head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.cost3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cost3 div{display:grid;border:1px solid var(--line);border-radius:6px;padding:8px 10px}
+.cost3 .k{font:500 11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.cost3 .v{font-family:var(--display);font-weight:600;font-size:24px;font-variant-numeric:tabular-nums}
+.cost3 .mid{border-color:var(--accent)}
+details summary{cursor:pointer;font-weight:600}
+.lines{width:100%;min-width:0;font-size:13px}
+.lines td{padding:4px 6px}
+.about{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:8px;align-content:start;min-width:0}
+.card ul,.card ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.plan{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:6px;align-content:start}
+.plan.feature{border:2px solid var(--accent)}
+.plan .price{font-family:var(--display);font-weight:700;font-size:34px;line-height:1}
+.plan .who{font:500 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.empty{background:var(--panel);border:1px dashed var(--line);border-radius:8px;padding:28px;display:grid;gap:10px;justify-items:start}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:6px;font-size:14px}
+@media (max-width:960px){.work,.about{grid-template-columns:1fr}.tiles{grid-template-columns:1fr 1fr}.plans{grid-template-columns:1fr}}
+@media (max-width:640px){.sections{grid-template-columns:1fr}}
+@media (max-width:420px){.tiles{grid-template-columns:1fr}.cost3{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+  <div class="bar">
+    <div class="brand"><b>Keepway</b><span>Flood screening for remote road crossings: which ones fail, what fixes them, what it costs.</span></div>
+    <nav id="nav">
+      <button class="nav" data-view="plan" aria-current="page">Capital plan</button>
+      <button class="nav" data-view="site">Crossing</button>
+      <button class="nav" data-view="about">How it works &amp; plans</button>
+    </nav>
+  </div>
+  <div id="banner" class="banner" hidden></div>
+  <main id="view"></main>
+  <p class="note">Screening-level results (AACE Class 5, 2026 CAD). Unit rates from Alberta Transportation 2026 unit price averages; hydraulics use inlet/orifice culvert flow and broad-crested weir overtopping. Not a substitute for a stamped design: survey, geotechnical and hydrology studies come next.</p>
+</div>
+<div id="toast" class="toast" hidden></div>
+
+<script>
+/* ===== Engine ===== */
+const g=9.81;
+const RATE={ fill:24, gbc:34, grav:42, rip:300, geo:7, exc:12, conc:3300, csp12:1100, csp18:2600, arch:4650, bridge:5500, debris:25000, bypass:75000 };
+const MARK={ mob:.05, temp:.04, env:.03, eng:.12, cont:.40 };   // % of direct; engineering on construction; Class 5 contingency
+const RANGE={ low:.49, high:2.53 };                              // low/high ÷ central, from the UNHack cost workbook spread
+const OM=.008, PV30=19.6;                                        // O&M share of capital per year; PV factor 30 yr @ 3% real
+const OPTIONS=[
+  {id:"t18", name:"Twin 1800 mm steel pipes", open:L=>[{w:1.8,rise:1.8,inv:0,A:2.545},{w:1.8,rise:1.8,inv:0,A:2.545}], cost:L=>2*L*RATE.csp18},
+  {id:"a32", name:"3 m arch + 1200 mm relief pipe", open:L=>[{w:3,rise:2,inv:0,A:5.0},{w:1.2,rise:1.2,inv:.5,A:1.131}], cost:L=>(L+6)*RATE.arch+40*RATE.conc+L*RATE.csp12},
+  {id:"a33", name:"3 m × 3 m open-bottom arch", open:L=>[{w:3,rise:3,inv:0,A:7.5}], cost:L=>(L+6)*RATE.arch*1.2+50*RATE.conc},
+  {id:"a33x2", name:"Twin 3 m × 3 m arches", open:L=>[{w:3,rise:3,inv:0,A:7.5},{w:3,rise:3,inv:0,A:7.5}], cost:L=>2*((L+6)*RATE.arch*1.2+50*RATE.conc)},
+  {id:"br15", name:"15 m single-span bridge", open:L=>[{w:13,rise:3.2,inv:0,A:38}], cost:L=>15*11*RATE.bridge}
+];
+const RAISES=[0,.5,1,1.5,2];
+function openingQ(o,hw){ if(hw<=o.inv) return 0; const b=o.block||0;
+  const weir=1.7*o.w*(1-b)*Math.pow(hw-o.inv,1.5);
+  const orifice=.6*o.A*(1-b)*Math.sqrt(2*g*Math.max(hw-(o.inv+o.rise/2),.001));
+  return Math.min(weir,orifice); }
+function totalQ(s,hw){ let q=s.openings.reduce((a,o)=>a+openingQ(o,hw),0); if(hw>s.crest) q+=1.7*s.Lw*Math.pow(hw-s.crest,1.5); return q; }
+function headwater(s,Q){ let lo=0,hi=12; for(let i=0;i<60;i++){const m=(lo+hi)/2; if(totalQ(s,m)<Q) lo=m; else hi=m;} return (lo+hi)/2; }
+function designQ(c){ return c.qMode==="rational" ? c.C*c.i*(1+c.climate/100)*c.area/3.6 : c.Qref*c.designPct/100; }
+function existing(c){ const d=c.dia/1000; const o=[]; for(let k=0;k<c.n;k++) o.push({w:d,rise:d,inv:0,A:Math.PI*d*d/4,block:c.block/100}); return {crest:c.crest,Lw:c.Lw,openings:o}; }
+function raiseCost(c,h){ if(!h) return 0; const B=8.5,S=3,H0=c.crest,Lr=c.raiseLen;
+  const add=(H0+h)*(B+S*(H0+h))-H0*(B+S*H0);
+  return Lr*add*RATE.fill + Lr*B*.3*2.2*RATE.gbc + Lr*B*.15*2.2*RATE.grav + Lr*2*Math.hypot(H0+h,S*(H0+h))*RATE.geo*0.3; }
+function markup(direct,c,soft){ const cons=direct*(1+MARK.mob+MARK.temp+MARK.env); const base=cons*(1+MARK.eng)+soft; return base*(1+MARK.cont)*c.remote; }
+function lines(c,opt,h){
+  const L=c.barrel, L0=[];
+  if(c.kind==="stage"){
+    const H0=c.crest-c.ground, H1=c.targetCrest-c.ground, B=9, S=3, Lr=c.raiseLen;
+    const add=H1*(B+S*H1)-H0*(8+2*H0); const slope=H1*Math.hypot(1,S);
+    L0.push(["Embankment raise, imported fill", Lr*add, "m³", RATE.fill]);
+    L0.push(["Granular base + gravel surface", Lr*B*.4*2.2, "t", (RATE.gbc+RATE.grav)/2]);
+    L0.push(["Rock armour, ice-exposed half", Lr*.5*2*slope*.45, "m³", RATE.rip]);
+    L0.push(["Geotextile on soft ground", Lr*(B+2*S*H1), "m²", RATE.geo]);
+    L0.push(["Equalization culverts 1200 mm", Math.ceil(Lr/450)*(B+2*S*H1+4), "m", RATE.csp12]);
+    L0.push(["Stage / ice monitoring station", 1, "each", 80000]);
+  } else {
+    L0.push(["Remove failed fill and old pipes", 600, "m³", RATE.exc]);
+    L0.push([opt.name, 1, "lump", opt.cost(L)]);
+    if(h) L0.push([`Raise road ${h.toFixed(1)} m over ${c.raiseLen} m`, 1, "lump", raiseCost(c,h)]);
+    L0.push(["Riprap aprons and slope armour", 350, "m³", RATE.rip]);
+    L0.push(["Geotextile under riprap", 1000, "m²", RATE.geo]);
+    L0.push(["Debris deflector", 1, "each", RATE.debris]);
+    L0.push(["Temporary detour (keep the road open)", 1, "each", RATE.bypass]);
+  }
+  return L0;
+}
+function evaluate(c){
+  const out={};
+  if(c.kind==="stage"){
+    out.todayOpen = c.designStage < c.crest; out.todayMargin=c.crest-c.designStage;
+    const target=c.designStage+c.freeboard; out.raise=Math.max(0,target-c.crest); c.targetCrest=Math.max(c.crest,target);
+    out.option={name:`Raise ${c.raiseLen.toLocaleString()} m of road to ${c.targetCrest.toFixed(1)} m`}; out.h=out.raise;
+    out.after={crest:c.targetCrest}; out.afterMargin=c.targetCrest-c.designStage; out.Q=null;
+  } else {
+    const Q=designQ(c); out.Q=Q; const ex=existing(c); const hw=headwater(ex,Q);
+    out.todayOpen = hw < c.crest; out.todayMargin=c.crest-hw; out.todayCap=totalQ({...ex,Lw:0},c.crest);
+    let best=null;
+    for(const opt of OPTIONS) for(const h of RAISES){
+      const s={crest:c.crest+h,Lw:c.Lw,openings:opt.open(c.barrel)};
+      const hwa=headwater(s,Q); if(s.crest-hwa < c.freeboard) continue;
+      const cost=opt.cost(c.barrel)+raiseCost(c,h);
+      if(!best||cost<best.cost) best={opt,h,s,hwa,cost};
+    }
+    if(!best){ out.fail=true; return out; }
+    out.option=best.opt; out.h=best.h; out.after=best.s; out.afterMargin=best.s.crest-best.hwa;
+  }
+  out.lines=lines(c,out.option,out.h);
+  out.direct=out.lines.reduce((a,l)=>a+l[1]*l[3],0);
+  const soft=c.kind==="stage"?900000:(c.survey||130000);
+  out.mid=markup(out.direct,c,soft); out.low=out.mid*RANGE.low; out.high=out.mid*RANGE.high;
+  out.om=out.mid*OM; out.lc=out.mid+out.om*PV30;
+  const avoided=Math.max(0,(c.closureDays||0)-(c.kind==="stage"?.2:.3));
+  out.score = out.todayOpen ? 0 : (c.people*avoided)/(out.mid/1e6);
+  return out;
+}
+
+/* ===== Data ===== */
+const DEFAULTS={kind:"culvert",community:"",site:"",province:"",people:0,closureDays:0,remote:1.3,n:1,dia:1200,block:25,crest:1.8,Lw:30,barrel:30,raiseLen:300,qMode:"reference",Qref:8,designPct:180,area:2,i:55,C:.5,climate:20,freeboard:.3,ground:7,designStage:9.8,survey:130000,source:"",evidence:"Illustrative"};
+const DEMO=[
+ {id:"po1",community:"Potlotek First Nation",site:"Matle'n's Brook, Chapel Island Rd",province:"NS",people:423,closureDays:20,remote:1.15,n:2,dia:1200,block:25,crest:2.2,Lw:40,barrel:24,raiseLen:150,qMode:"rational",area:2,i:55,C:.5,climate:20,freeboard:.3,source:"Sept 2026 closure (Reported); catchment and IDF assumed",evidence:"Reported + Illustrative"},
+ {id:"er17",community:"English River First Nation",site:"Hwy 918 km 17",province:"SK",people:565,closureDays:6,remote:1.3,n:2,dia:1200,block:25,crest:1.8,Lw:30,barrel:30,raiseLen:300,qMode:"reference",Qref:8,designPct:180,freeboard:.3,source:"Washout May 2026 (paNOW, Reported)",evidence:"Reported + Illustrative"},
+ {id:"er29",community:"English River First Nation",site:"Hwy 918 km 29",province:"SK",people:565,closureDays:6,remote:1.3,n:1,dia:1400,block:30,crest:1.6,Lw:35,barrel:30,raiseLen:300,qMode:"reference",Qref:9,designPct:180,freeboard:.3,source:"Washout May 2026 (paNOW, Reported)",evidence:"Reported + Illustrative"},
+ {id:"er40",community:"English River First Nation",site:"Hwy 918 km 40",province:"SK",people:565,closureDays:6,remote:1.3,n:2,dia:1200,block:20,crest:2.0,Lw:30,barrel:30,raiseLen:300,qMode:"reference",Qref:7,designPct:180,freeboard:.3,source:"Washout May 2026 (paNOW, Reported)",evidence:"Reported + Illustrative"},
+ {id:"mi1",community:"Minegoziibe Anishinabe",site:"Hwy 20 crossing (site TBC)",province:"MB",people:640,closureDays:4,remote:1.1,n:2,dia:1200,block:20,crest:2.0,Lw:35,barrel:32,raiseLen:350,qMode:"reference",Qref:10,designPct:160,freeboard:.3,source:"July 2026 closure (Reported); failure sites not yet identified",evidence:"Reported + Illustrative"},
+ {id:"ka1",kind:"stage",community:"Kashechewan First Nation",site:"Airport access road",province:"ON",people:2000,closureDays:14,remote:1.6,crest:8.5,ground:7,designStage:9.8,freeboard:1.0,raiseLen:3500,source:"May 1, 2025 inundation (Reported); elevations conceptual",evidence:"Reported + Illustrative"}
+];
+let db=null, user=null, canWrite=false, rows=[], selected=null, view="plan", unsub=null, demo=true;
+const norm=r=>({...DEFAULTS,...r});
+
+/* ===== UI helpers ===== */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const money=v=>v>=1e6?"$"+(v/1e6).toFixed(v>=1e7?1:2)+"M":"$"+Math.round(v/1e3)+"k";
+function toast(t){ const el=$("toast"); el.textContent=t; el.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>el.hidden=true,2400); }
+function go(v,id){ view=v; if(id!==undefined) selected=id; document.querySelectorAll(".nav").forEach(b=>b.setAttribute("aria-current",b.dataset.view===v?"page":"false")); try{localStorage.setItem("kw-view",v)}catch(e){} render(); window.scrollTo({top:0}); }
+$("nav").addEventListener("click",e=>{const b=e.target.closest(".nav"); if(b) go(b.dataset.view);});
+
+/* ===== Views ===== */
+function render(){ if(view==="plan") renderPlan(); else if(view==="site") renderSite(); else renderAbout(); }
+
+function ranked(){ return rows.map(r=>({r:norm(r),e:evaluate(norm(r))})).sort((a,b)=>(b.e.score||0)-(a.e.score||0)); }
+
+function renderPlan(){
+  const list=ranked();
+  if(!list.length){
+    $("view").innerHTML=`<div class="empty"><h2>No crossings yet</h2><p>Add the first road crossing your community loses in floods. You need the culvert size, how high the road sits above the creek bed, and either a past flood flow or the catchment area.</p>${canWrite?`<button class="btn" id="add0">Add a crossing</button>`:`<p class="note">Sign in with edit access to add crossings.</p>`}</div>`;
+    $("add0")&&($("add0").onclick=()=>{selected=null;go("site",null);}); return;
+  }
+  const fail=list.filter(x=>!x.e.todayOpen), tot=fail.reduce((a,x)=>a+(x.e.mid||0),0), totL=fail.reduce((a,x)=>a+(x.e.low||0),0), totH=fail.reduce((a,x)=>a+(x.e.high||0),0);
+  const people=new Map(); fail.forEach(x=>people.set(x.r.community,Math.max(people.get(x.r.community)||0,x.r.people)));
+  const ppl=[...people.values()].reduce((a,b)=>a+b,0);
+  const comms=[...new Set(list.map(x=>x.r.community))];
+  $("view").innerHTML=`
+  <div style="display:grid;gap:14px">
+    <div class="toolbar"><div class="left"><h2>Capital plan</h2><span class="note">${list.length} crossings in ${comms.length} communities, ranked by people kept connected per $1M</span></div>
+      <div class="left">${canWrite?`<button class="btn" id="add">Add crossing</button>`:""}<button class="btn ghost" id="csv">Export CSV</button></div></div>
+    <section class="tiles">
+      <div class="tile"><span class="k">Fail the design flood today</span><span class="v">${fail.length} of ${list.length}</span><span class="s">road overtops or sits under water</span></div>
+      <div class="tile"><span class="k">People behind failing crossings</span><span class="v">${ppl.toLocaleString()}</span><span class="s">largest community population per crossing</span></div>
+      <div class="tile"><span class="k">Fix them all (central)</span><span class="v">${money(tot)}</span><span class="s">range ${money(totL)} – ${money(totH)}, 2026 CAD</span></div>
+      <div class="tile"><span class="k">30-year lifecycle</span><span class="v">${money(fail.reduce((a,x)=>a+(x.e.lc||0),0))}</span><span class="s">capital + O&amp;M, present value at 3%</span></div>
+    </section>
+    <div class="tablebox"><table>
+      <thead><tr><th>#</th><th>Crossing</th><th>Design flood</th><th>Today</th><th>Recommended fix</th><th class="num">Central cost</th><th class="num">Range</th><th class="num">People per $1M</th></tr></thead>
+      <tbody>${list.map((x,i)=>`<tr data-id="${esc(x.r.id)}">
+        <td class="rank">${x.e.todayOpen?"–":i+1}</td>
+        <td><strong>${esc(x.r.site)}</strong><br><span class="note">${esc(x.r.community)} · ${esc(x.r.province)}</span></td>
+        <td class="num">${x.r.kind==="stage"?x.r.designStage.toFixed(1)+" m stage":x.e.Q.toFixed(1)+" m³/s"}</td>
+        <td>${x.e.todayOpen?`<span class="pill open">Holds</span>`:`<span class="pill closed">Closes</span>`}<br><span class="note">${x.e.todayOpen?`${x.e.todayMargin.toFixed(2)} m spare`:`${(-x.e.todayMargin).toFixed(2)} m over road`}</span></td>
+        <td>${x.e.fail?`<span class="pill warn">Needs a site study</span>`:x.e.todayOpen?`<span class="note">None needed at this flood</span>`:`${esc(x.e.option.name)}${x.e.h&&x.r.kind!=="stage"?` + raise ${x.e.h.toFixed(1)} m`:""}`}</td>
+        <td class="num">${x.e.todayOpen||x.e.fail?"–":money(x.e.mid)}</td>
+        <td class="num">${x.e.todayOpen||x.e.fail?"–":money(x.e.low)+" – "+money(x.e.high)}</td>
+        <td class="num">${x.e.todayOpen||x.e.fail?"–":Math.round(x.e.score).toLocaleString()}</td></tr>`).join("")}</tbody></table></div>
+    <p class="note">Ranking: people × closure days avoided per year ÷ central cost in $M. Edit a crossing to see why it ranks where it does.</p>
+  </div>`;
+  $("view").querySelectorAll("tbody tr").forEach(tr=>tr.onclick=()=>go("site",tr.dataset.id));
+  $("add")&&($("add").onclick=()=>go("site",null));
+  $("csv").onclick=()=>exportCsv(list);
+}
+
+async function exportCsv(list){
+  const head=["rank","community","site","province","people","design_flood","today","recommended_fix","raise_m","cost_low_cad","cost_central_cad","cost_high_cad","om_per_year_cad","lifecycle_30yr_pv_cad","source","evidence"];
+  const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
+  const body=list.map((x,i)=>[x.e.todayOpen?"":i+1,x.r.community,x.r.site,x.r.province,x.r.people,x.r.kind==="stage"?x.r.designStage+" m stage":x.e.Q.toFixed(2)+" m3/s",x.e.todayOpen?"holds":"closes",x.e.todayOpen?"":(x.e.option?.name||"site study"),x.e.h?.toFixed?.(1)||"",...(x.e.todayOpen||x.e.fail?["","","","",""]:[x.e.low,x.e.mid,x.e.high,x.e.om,x.e.lc].map(v=>Math.round(v))),x.r.source,x.r.evidence].map(q).join(","));
+  const csv=[head.join(","),...body].join("\n");
+  const dl=window.claude? await claude.use("downloads").catch(()=>null) : null;
+  if(dl){ try{ await dl.save({filename:"keepway-capital-plan.csv",data:csv}); toast("Saved keepway-capital-plan.csv"); return; }catch(e){ if(e&&e.code==="declined") return; } }
+  try{ await navigator.clipboard.writeText(csv); toast("Copied the plan as CSV"); }catch(e){ toast("Couldn't save or copy the CSV here"); }
+}
+
+let fid=0;
+function field(k,label,unit,attrs=""){ const id=`f-${k}-${++fid}`; return `<label for="${id}">${label}${unit?` <span class="u">${unit}</span>`:""}<input id="${id}" data-k="${k}" ${attrs}></label>`; }
+function renderSite(){
+  let r = selected ? rows.find(x=>x.id===selected) : null;
+  const isNew=!r; const c=norm(r||{id:"",community:"",site:""});
+  let draft={...c};
+  $("view").innerHTML=`
+  <div style="display:grid;gap:14px">
+    <div class="toolbar"><div class="left"><button class="btn ghost" id="back">← Capital plan</button><h2>${isNew?"New crossing":esc(c.site)}</h2></div>
+      <div class="left">${!isNew&&canWrite?`<button class="btn danger" id="del">Delete</button>`:""}${canWrite?`<button class="btn" id="save">${isNew?"Add to plan":"Save changes"}</button>`:""}</div></div>
+    <div class="work">
+      <form class="form" id="form" autocomplete="off">
+        <fieldset><legend>Where</legend>
+          ${field("community","Community","","type=text")}${field("site","Crossing","","type=text placeholder='Hwy 918 km 17'")}
+          <div class="row2">${field("province","Province","","type=text maxlength=2")}${field("people","People who depend on it","","type=number min=0 step=1")}</div>
+          <div class="row2">${field("closureDays","Closure days in a bad year","days","type=number min=0 step=0.5")}${field("remote","Remote cost factor","×","type=number min=1 max=2.5 step=0.05")}</div>
+          <label for="f-kind">Flood type<select id="f-kind" data-k="kind"><option value="culvert">Creek or runoff through a culvert</option><option value="stage">River backwater or ice jam</option></select></label>
+        </fieldset>
+        <fieldset id="fs-culvert"><legend>The crossing today</legend>
+          <div class="row2">${field("n","Number of pipes","","type=number min=1 max=4 step=1")}${field("dia","Pipe diameter","mm","type=number min=300 max=3000 step=100")}</div>
+          <div class="row2">${field("block","Blocked by debris","%","type=number min=0 max=90 step=5")}${field("crest","Road height above creek bed","m","type=number min=0.5 max=8 step=0.1")}</div>
+          <div class="row2">${field("Lw","Length of road that overtops","m","type=number min=5 max=500 step=5")}${field("barrel","Pipe length","m","type=number min=10 max=80 step=1")}</div>
+          ${field("raiseLen","Road length to raise if needed","m","type=number min=50 max=2000 step=50")}
+        </fieldset>
+        <fieldset id="fs-flow"><legend>Design flood</legend>
+          <label for="f-qMode">Flow from<select id="f-qMode" data-k="qMode"><option value="reference">A past flood, scaled</option><option value="rational">Catchment and rainfall (rational method)</option></select></label>
+          <div class="row2" id="q-ref">${field("Qref","Past flood flow","m³/s","type=number min=0.1 step=0.1")}${field("designPct","Design flood as % of it","%","type=number min=50 max=400 step=5")}</div>
+          <div id="q-rat" style="display:grid;gap:8px"><div class="row2">${field("area","Catchment area","km²","type=number min=0.05 step=0.05")}${field("i","Rain intensity, 1-in-100 yr","mm/h","type=number min=5 step=1")}</div>
+          <div class="row2">${field("C","Runoff coefficient","0–1","type=number min=0.1 max=1 step=0.05")}${field("climate","Climate uplift","%","type=number min=0 max=60 step=5")}</div></div>
+          ${field("freeboard","Freeboard required","m","type=number min=0 max=2 step=0.1")}
+        </fieldset>
+        <fieldset id="fs-stage"><legend>River level</legend>
+          <div class="row2">${field("ground","Ground level","m ASL","type=number step=0.1")}${field("crest","Road crown today","m ASL","type=number step=0.1")}</div>
+          <div class="row2">${field("designStage","Design flood stage","m ASL","type=number step=0.1")}${field("raiseLen","Road length","m","type=number min=50 step=50")}</div>
+          ${field("freeboard","Freeboard for ice and waves","m","type=number min=0 max=3 step=0.1")}
+        </fieldset>
+        <fieldset><legend>Evidence</legend>${field("source","Where the numbers come from","","type=text")}
+          <label for="f-evidence">Confidence<select id="f-evidence" data-k="evidence"><option>Verified</option><option>Reported</option><option>Reported + Illustrative</option><option>Illustrative</option></select></label></fieldset>
+      </form>
+      <div class="right">
+        <section class="control"><div class="control-top"><label for="flood" style="font-weight:600;color:var(--ink)">Try a flood</label><span class="readout" id="readout"></span></div>
+          <input type="range" id="flood"><div class="presets" id="presets"></div></section>
+        <section class="sections">
+          <article class="sec"><div class="sec-head"><h4>Today</h4><span class="sign" id="sB"></span></div><svg id="svB" viewBox="0 0 600 260" role="img" aria-label="Today's crossing at the chosen flood"></svg><div class="metric" id="mB"></div></article>
+          <article class="sec"><div class="sec-head"><h4>With Keepway's fix</h4><span class="sign" id="sA"></span></div><svg id="svA" viewBox="0 0 600 260" role="img" aria-label="Upgraded crossing at the chosen flood"></svg><div class="metric" id="mA"></div></article>
+        </section>
+        <section class="result" id="result"></section>
+      </div>
+    </div>
+  </div>`;
+  const form=$("form");
+  // fill inputs (crest/raiseLen/freeboard appear in two fieldsets; keep both in sync)
+  form.querySelectorAll("[data-k]").forEach(el=>{ el.value=draft[el.dataset.k]??""; });
+  form.querySelectorAll("input,select").forEach(el=>{ if(!canWrite) el.disabled=true; });
+  const showKind=()=>{ const st=draft.kind==="stage"; $("fs-culvert").hidden=st; $("fs-flow").hidden=st; $("fs-stage").hidden=!st;
+    $("q-ref").hidden=draft.qMode!=="reference"; $("q-rat").hidden=draft.qMode!=="rational";
+    $("fs-culvert").disabled=st; $("fs-flow").disabled=st; $("fs-stage").disabled=!st; };
+  form.addEventListener("input",e=>{ const el=e.target, k=el.dataset.k; if(!k) return;
+    draft[k]= el.type==="number" ? (el.value===""?"":parseFloat(el.value)) : el.value;
+    form.querySelectorAll(`[data-k="${k}"]`).forEach(o=>{ if(o!==el) o.value=el.value; });
+    if(k==="kind"||k==="qMode"){ showKind(); setupSlider(); } refresh(); });
+  showKind();
+  let ev;
+  function setupSlider(){
+    const f=$("flood"), d=norm(draft);
+    if(d.kind==="stage"){ f.min=Math.round((d.ground)*100); f.max=Math.round((d.designStage+d.freeboard+1.2)*100); f.step=5; f.value=Math.round(d.designStage*100);
+      $("presets").innerHTML=`<button class="preset" type="button" data-v="${d.designStage}">Design stage · ${(+d.designStage).toFixed(1)} m</button>`; }
+    else { const Q=designQ(d); f.min=0; f.max=Math.max(5,Math.ceil(Q*1.6)); f.step=.1; f.value=Q.toFixed(1);
+      $("presets").innerHTML=`<button class="preset" type="button" data-v="${(Q*.4).toFixed(1)}">Ordinary year · ${(Q*.4).toFixed(1)} m³/s</button><button class="preset" type="button" data-v="${Q.toFixed(1)}">Design flood · ${Q.toFixed(1)} m³/s</button>`; }
+    $("presets").querySelectorAll(".preset").forEach(b=>b.onclick=()=>{ f.value = d.kind==="stage"?Math.round(b.dataset.v*100):b.dataset.v; drawNow(); });
+  }
+  function drawNow(){
+    const d=norm(draft), f=$("flood");
+    if(!ev||ev.fail){ $("svA").innerHTML=""; }
+    if(d.kind==="stage"){ const z=f.value/100; $("readout").textContent=z.toFixed(2)+" m ASL";
+      const before={crest:d.crest}, after={crest:ev&&!ev.fail?ev.after.crest:d.crest};
+      draw($("svB"),before,z,d,true,false); draw($("svA"),after,z,d,true,true);
+      sign($("sB"),z<before.crest); sign($("sA"),z<after.crest);
+      $("mB").textContent= z<before.crest?`${(before.crest-z).toFixed(2)} m spare`:`${(z-before.crest).toFixed(2)} m of water on the road`;
+      $("mA").textContent= z<after.crest?`${(after.crest-z).toFixed(2)} m spare`:`${(z-after.crest).toFixed(2)} m of water on the road`;
+    } else { const Q=+f.value; $("readout").textContent=Q.toFixed(1)+" m³/s";
+      const ex=existing(d), hb=headwater(ex,Q); draw($("svB"),ex,hb,d,false,false); sign($("sB"),hb<ex.crest);
+      $("mB").textContent= hb<ex.crest?`Water ${hb.toFixed(2)} m · ${(ex.crest-hb).toFixed(2)} m spare`:`${(hb-ex.crest).toFixed(2)} m over the road`;
+      if(ev&&!ev.fail){ const ha=headwater(ev.after,Q); draw($("svA"),ev.after,ha,d,false,true); sign($("sA"),ha<ev.after.crest);
+        $("mA").textContent= ha<ev.after.crest?`Water ${ha.toFixed(2)} m · ${(ev.after.crest-ha).toFixed(2)} m spare`:`${(ha-ev.after.crest).toFixed(2)} m over the road`; }
+      else { $("sA").textContent="Study"; $("sA").className="sign closed"; $("mA").textContent="No standard fix passes: needs a site-specific design."; }
+    }
+  }
+  function refresh(){
+    const d=norm(draft); ev=evaluate(d);
+    const res=$("result");
+    if(ev.fail){ res.innerHTML=`<div class="head"><h3>No standard fix passes this flood</h3><span class="pill warn">Site study</span></div><p>None of the catalogue crossings, with up to 2 m of road raise, keeps ${d.freeboard} m of freeboard at ${ev.Q.toFixed(1)} m³/s. This crossing needs a bridge or a site-specific design.</p>`; drawNow(); return; }
+    res.innerHTML=`<div class="head"><h3>${ev.todayOpen?"This crossing holds the design flood":"Recommended fix"}</h3>${ev.todayOpen?`<span class="pill open">No fix needed</span>`:`<span class="pill closed">Closes today</span>`}</div>
+      ${ev.todayOpen?`<p>Today's road keeps ${ev.todayMargin.toFixed(2)} m of freeboard at the design flood. Keep the pipes clear of debris and re-screen if the catchment changes (fire, logging).</p>`:`
+      <p><strong>${esc(ev.option.name)}</strong>${d.kind!=="stage"&&ev.h?`, and raise the road ${ev.h.toFixed(1)} m over ${d.raiseLen} m`:""}. ${d.kind==="stage"?`Ice-jam water can't be drained by a channel, so the road goes above it with ${d.freeboard} m freeboard and armoured slopes.`:`Cheapest option in the catalogue that keeps ${d.freeboard} m of freeboard at ${ev.Q.toFixed(1)} m³/s.`}${d.kind!=="stage"?` Today's pipes carry about ${ev.todayCap.toFixed(1)} m³/s before the road overtops.`:""}</p>
+      <div class="cost3"><div><span class="k">Low</span><span class="v">${money(ev.low)}</span></div><div class="mid"><span class="k">Central</span><span class="v">${money(ev.mid)}</span></div><div><span class="k">High</span><span class="v">${money(ev.high)}</span></div></div>
+      <p class="note">O&amp;M about ${money(ev.om)}/yr · 30-year lifecycle ${money(ev.lc)} (PV, 3% real) · ${Math.round(ev.score).toLocaleString()} people kept connected per $1M · build in about ${d.kind==="stage"?"3 seasons":"1 season"}, in place about ${d.kind==="stage"?"5–6":"2–3"} years from funding.</p>
+      <details><summary>Cost breakdown</summary><div style="overflow-x:auto"><table class="lines"><tbody>
+        ${ev.lines.map(l=>`<tr><td>${esc(l[0])}</td><td class="num">${l[2]==="lump"?"":Math.round(l[1]).toLocaleString()+" "+l[2]}</td><td class="num">${money(l[1]*l[3])}</td></tr>`).join("")}
+        <tr><td>Direct construction</td><td></td><td class="num">${money(ev.direct)}</td></tr>
+        <tr><td colspan="2">+ mobilization 5%, traffic 4%, environment 3%, engineering 12%, surveys and permits, contingency 40%, × remote factor ${d.remote}</td><td class="num"><strong>${money(ev.mid)}</strong></td></tr>
+      </tbody></table></div></details>`}`;
+    drawNow();
+  }
+  $("flood").addEventListener("input",drawNow);
+  setupSlider(); refresh();
+  $("back").onclick=()=>go("plan");
+  $("save")&&($("save").onclick=async()=>{
+    if(!String(draft.community).trim()||!String(draft.site).trim()){ toast("Add the community and crossing name first"); return; }
+    const clean={}; Object.keys(DEFAULTS).forEach(k=>{ let v=draft[k]; if(typeof DEFAULTS[k]==="number"){ v=parseFloat(v); if(!isFinite(v)) v=DEFAULTS[k]; } clean[k]=v; });
+    if(!db){ const id=selected||("local-"+Date.now()); const i=rows.findIndex(x=>x.id===id); const rec={...clean,id}; if(i>=0) rows[i]=rec; else rows.push(rec); selected=id; toast("Saved in this demo only"); go("plan"); return; }
+    $("save").disabled=true;
+    try{ const id=selected||((draft.community+"-"+draft.site).toLowerCase().replace(/[^a-z0-9]+/g,"-").slice(0,60)+"-"+Date.now().toString(36));
+      await db.collection("crossings").doc(id).set({...clean,updatedAt:Date.now()}); selected=id; toast(isNew?"Added to the plan":"Saved"); go("plan"); }
+    catch(e){ toast(e&&e.code==="not_granted"?"You don't have edit access to this plan":"Couldn't save. Try again."); $("save").disabled=false; }
+  });
+  $("del")&&($("del").onclick=async()=>{
+    const b=$("del"); if(b.dataset.armed!=="1"){ b.dataset.armed="1"; b.textContent="Click again to delete"; setTimeout(()=>{b.dataset.armed="";b.textContent="Delete";},3000); return; }
+    if(!db){ rows=rows.filter(x=>x.id!==selected); selected=null; toast("Deleted from this demo"); go("plan"); return; }
+    try{ await db.collection("crossings").doc(selected).delete(); selected=null; toast("Deleted"); go("plan"); }catch(e){ toast("Couldn't delete. Try again."); }
+  });
+}
+function sign(el,open){ el.textContent=open?"Open":"Closed"; el.className="sign "+(open?"open":"closed"); }
+function draw(svg,s,level,d,stage,upgraded){
+  const W=600,H=260;
+  const zmin= stage? d.ground-.5 : -.5, zmax= stage? Math.max(d.designStage+d.freeboard+1.4, s.crest+1) : Math.max(4,(d.crest+2.2));
+  const y=z=>H-22-(z-zmin)/(zmax-zmin)*(H-44);
+  const crestY=y(s.crest), baseY=y(stage?d.ground:0), cx=300, top=70, hpx=baseY-crestY, half=top/2+hpx*1.15;
+  const emb=`M${cx-half},${baseY} L${cx-top/2},${crestY} L${cx+top/2},${crestY} L${cx+half},${baseY} Z`;
+  const wl=y(Math.min(level,zmax));
+  let water;
+  if(stage) water=`M0,${wl} L${W},${wl} L${W},${H} L0,${H} Z`;
+  else { const down=y(Math.min(level*.45,s.crest*.55)); water= level>s.crest?`M0,${wl} L${W},${wl} L${W},${H} L0,${H} Z`:`M0,${wl} L${cx-half*.5},${wl} L${cx+half*.5},${down} L${W},${down} L${W},${H} L0,${H} Z`; }
+  let ops="";
+  if(!stage){ s.openings.forEach((o,i)=>{ const a=y(Math.min(o.inv+o.rise,s.crest-.15)), b=y(o.inv); ops+=`<rect x="${cx-half-6}" y="${a}" width="${2*half+12}" height="${b-a}" fill="var(--sky)" stroke="var(--gravel)" stroke-width="1.5" opacity="${i?.7:1}"/>`;
+      if(o.block){ const bh=(b-a)*o.block; ops+=`<rect x="${cx-half-6}" y="${b-bh}" width="${2*half+12}" height="${bh}" fill="var(--soil-dark)" opacity=".85"/>`; } }); }
+  const ticks=[]; for(let z=Math.ceil(zmin); z<=zmax; z++) ticks.push(`<line x1="34" x2="${W}" y1="${y(z)}" y2="${y(z)}" stroke="var(--line)"/><text x="30" y="${y(z)+4}" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">${z}</text>`);
+  const armour= upgraded?`<path d="M${cx-half},${baseY} L${cx-top/2},${crestY}" stroke="var(--gravel)" stroke-width="7" stroke-dasharray="3 3"/><path d="M${cx+top/2},${crestY} L${cx+half},${baseY}" stroke="var(--gravel)" stroke-width="7" stroke-dasharray="3 3"/>`:"";
+  const over=level>s.crest;
+  svg.innerHTML=`<rect width="${W}" height="${H}" fill="var(--sky)"/>${ticks.join("")}
+    <text x="36" y="15" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">${stage?"m ASL":"m above creek bed"}</text>
+    <path d="M0,${baseY} L${W},${baseY} L${W},${H} L0,${H} Z" fill="var(--soil-dark)"/>
+    <path d="${emb}" fill="var(--soil)" stroke="var(--soil-dark)" stroke-width="1.5"/>${armour}${ops}
+    <rect x="${cx-top/2}" y="${crestY-5}" width="${top}" height="5" fill="var(--gravel)"/>
+    <path d="${water}" fill="var(--water)" opacity=".72"/>
+    <line x1="0" x2="${W}" y1="${wl}" y2="${wl}" stroke="var(--water-deep)" stroke-width="1.5" stroke-dasharray="6 4"/>
+    <g font-family="IBM Plex Mono, monospace" font-size="12"><text x="${cx}" y="${crestY-11}" text-anchor="middle" fill="var(--ink)">road ${s.crest.toFixed(1)}</text>
+    <text x="${W-8}" y="${Math.max(wl-6,14)}" text-anchor="end" fill="var(--water-deep)">water ${level.toFixed(2)}</text>
+    ${over?`<text x="${cx}" y="${crestY+20}" text-anchor="middle" fill="var(--closed)" font-weight="600">${(level-s.crest).toFixed(2)} m over road</text>`:""}</g>`;
+}
+
+function renderAbout(){
+  $("view").innerHTML=`
+  <div style="display:grid;gap:16px">
+    <h2>Turn a list of washouts into a fundable capital plan</h2>
+    <div class="about">
+      <div class="card"><h3>The problem</h3><p>Many First Nations depend on one road, and it fails at a handful of crossings: an undersized or debris-plugged culvert, a low embankment, an ice-jam reach. Communities know where the road goes under. What they rarely have is the engineering screening a funding application asks for: which crossings fail, what fixes them, what it costs and in what order.</p>
+        <p>Getting that today means a consultant scoping study for each community, months before a first number.</p></div>
+      <div class="card"><h3>What Keepway does</h3><ol>
+        <li>Enter each crossing: pipe size, road height, a past flood or the catchment.</li>
+        <li>Keepway checks it against the design flood with standard culvert and overtopping hydraulics.</li>
+        <li>It picks the cheapest standard fix that keeps the road open with freeboard: bigger pipes, an arch, a bridge, a road raise.</li>
+        <li>It prices it in 2026 CAD from published provincial unit rates, with low, central and high values and a 30-year lifecycle.</li>
+        <li>It ranks every crossing by people kept connected per dollar and exports the plan.</li></ol></div>
+    </div>
+    <div class="card"><h3>Why the fix is usually the crossing, not a new road</h3><p>Our UNHack study of four communities (Potlotek, English River, Minegoziibe, Kashechewan) priced all three approaches. Upgrading the failing crossings cost <strong>$1.8M–$9.9M</strong> per community. New elevated roads cost <strong>$7.5M–$346M</strong> and still had to cross the same water. Diversion channels and storage ponds cost <strong>$5.6M–$1.4B</strong>, and against ice-jam flooding they don't work at all. Keepway builds that judgement into the tool.</p></div>
+    <h2>Plans</h2>
+    <div class="plans">
+      <div class="plan"><span class="who">First Nations &amp; tribal councils</span><span class="price">Free</span><p>Screen your own crossings, keep a shared plan for your team, export it for funding applications.</p></div>
+      <div class="plan feature"><span class="who">Engineering firms</span><span class="price">$4,900<span style="font-size:16px"> / yr per seat</span></span><p>Unlimited communities, editable unit-rate libraries by province, branded reports, scoping in days instead of months.</p></div>
+      <div class="plan"><span class="who">Funders &amp; ministries</span><span class="price">Portfolio</span><p>Annual licence. Every crossing across a region in one ranked list, to decide where mitigation money goes first.</p></div>
+    </div>
+    <p class="note">Prices are proposed for discussion, not a live offer. Free for communities is the point: the firms and funders who already pay for scoping studies pay for the tool.</p>
+    <div class="card"><h3>What Keepway is not</h3><ul><li>Not a stamped design. It screens and prices; survey, geotechnical and hydrology studies size the final structure.</li><li>Not for big rivers. Ice-jam and river backwater sites get a road-raise check only, because no channel drains them.</li><li>Not a substitute for consultation. Land, cultural sites and fish habitat decisions belong to the community and the regulators.</li></ul></div>
+  </div>`;
+}
+
+/* ===== Boot ===== */
+(async function start(){
+  try{ const v=localStorage.getItem("kw-view"); if(v&&v!=="site") view=v; }catch(e){}
+  rows=DEMO.map(r=>({...r})); render();
+  if(!window.claude){ $("banner").hidden=false; $("banner").textContent="Example data. Open this page in Claude to keep a shared plan."; canWrite=true; render(); return; }
+  const timer=setTimeout(()=>{ if(demo){ $("banner").hidden=false; $("banner").textContent="Showing example data. Saving is off because the plan store didn't answer."; canWrite=true; render(); } },10000);
+  db=await claude.use("db"); user=await claude.use("user");
+  if(!db){ clearTimeout(timer); $("banner").hidden=false; $("banner").textContent="Showing example data. Sign in to Claude to keep a shared plan; edits here aren't saved."; canWrite=true; render(); return; }
+  const w=user?.can?user.can("data.write"):null; canWrite = w!==false;
+  unsub=db.collection("crossings").onSnapshot(snap=>{
+    clearTimeout(timer); demo=false; $("banner").hidden=true;
+    const first=demo===false&&rows.__live; rows=snap.docs.map(d=>({...d.data(),id:d.id})); rows.__live=true; if(view!=="site"||!first) render();
+  }, e=>{ clearTimeout(timer); $("banner").hidden=false; $("banner").textContent="Couldn't load the shared plan, so this is example data."; });
+})();
+</script>
+
+</body></html>
