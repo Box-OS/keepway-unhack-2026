@@ -15,14 +15,11 @@ We priced three approaches for all four communities (2026 CAD, AACE Class 5):
 
 ## The product: Keepway (working prototype)
 - **Keepway Planner:** load terrain, place a start and end, and get the best route plus alternatives (upgrade the existing road, lowest lifecycle cost, highest ground, shortest drive) on a map with the 1-in-100-year flood. Each option comes with a cost range, 30-year lifecycle cost, crossings sized by catchment, and a construction-season schedule with earliest, likely and delayed completion.
-- **Crossing screener:** enter a community's failing crossings and get the cheapest standard fix, priced and ranked into a capital plan.
 - **Business model (proposed):** contractors and engineering firms pay per seat; owners and ministries pay for a portfolio licence; First Nations use it free.
 
 ## Links
-- Pitch deck: https://claude.ai/artifact/Dt48EUY96WL48FaSxxrsUL
-- Keepway Planner (route + map demo): https://claude.ai/artifact/WgRWvcN6kQ8YPZVCv3uMF2
-- Crossing screener: https://claude.ai/artifact/5T8fXEyM4LrDy1HimZbxLz
-- Flood simulator: https://claude.ai/artifact/X3MipoMaJMY6A5BosiD7ZN
+- Live prototype (Keepway Planner): https://box-os.github.io/keepway-unhack-2026/
+- Code and study files: https://github.com/Box-OS/keepway-unhack-2026
 
 ## Honest limits
 - The Planner demo runs on generated terrain; it accepts real elevation data (ESRI ASCII grid) but live satellite and street maps need the product hosted outside the prototype.
@@ -30,4 +27,4 @@ We priced three approaches for all four communities (2026 CAD, AACE Class 5):
 - Pricing is proposed, not a live offer.
 
 ## Included files
-Pitch summary, engineering README with decision tables, construction cost workbook, implementation timeline workbook, two graphs, a 217-entry source register, and the three prototype HTML files.
+Pitch summary, engineering README with decision tables, construction cost workbook, implementation timeline workbook, two graphs, a 217-entry source register and the Planner prototype (index.html).

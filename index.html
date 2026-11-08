@@ -1,49 +1,548 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Keepway</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body>
+<title>Keepway Planner</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-:root{--bg:#14232B;--ink:#F3F5F2;--muted:#B9C7CC;--card:#1E3440;--amber:#F2A20C}
+/* Layout: SaaS workspace — top bar, map canvas (left, dominant) with layer controls, decision panel (right): options, cost, schedule. Stacks on phones. */
+:root{
+  --bg:#eef1ef; --panel:#ffffff; --ink:#17201f; --muted:#5b6866; --line:#d5dcda; --hover:#eef3f2;
+  --accent:#0f6e70; --accent-ink:#ffffff; --sign:#f2a20c; --sign-ink:#1a1407; --open:#1f8a55; --closed:#c2412b; --water:#2f6f9f;
+  --o1:#0f6e70; --o2:#d4590b; --o3:#6b4bb8; --o4:#2f6f9f;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1514; --panel:#18211f; --ink:#e6ecea; --muted:#9aa8a5; --line:#2c3836; --hover:#1f2a28;
+  --accent:#3fb0b2; --accent-ink:#0b1514; --open:#3fb77a; --closed:#e0644c; --water:#6aa6d6;
+  --o1:#3fb0b2; --o2:#f08a3e; --o3:#a68cf0; --o4:#6aa6d6; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1514; --panel:#18211f; --ink:#e6ecea; --muted:#9aa8a5; --line:#2c3836; --hover:#1f2a28;
+  --accent:#3fb0b2; --accent-ink:#0b1514; --open:#3fb77a; --closed:#e0644c; --water:#6aa6d6;
+  --o1:#3fb0b2; --o2:#f08a3e; --o3:#a68cf0; --o4:#6aa6d6; color-scheme:dark}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "IBM Plex Sans",system-ui,sans-serif}
-.wrap{max-width:980px;margin:0 auto;padding:48px max(16px,env(safe-area-inset-left,0px)) 64px;display:grid;gap:28px}
-.bar{height:8px;background:var(--amber);position:fixed;top:0;left:0;right:0}
-h1{font:700 clamp(56px,10vw,96px)/1 "Barlow Condensed",Arial Narrow,sans-serif;margin:0;letter-spacing:.02em}
-.lede{font-size:20px;max-width:62ch;margin:0}
-.muted{color:var(--muted)}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-a.card{display:grid;gap:6px;background:var(--card);border-radius:12px;padding:20px;color:var(--ink);text-decoration:none;border:2px solid transparent}
-a.card:hover,a.card:focus-visible{border-color:var(--amber);outline:none}
-.card b{font:600 26px "Barlow Condensed",Arial Narrow,sans-serif}
-.tag{font:600 12px ui-monospace,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)}
-ul{margin:0;padding-left:20px}
-a{color:var(--amber)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.45}
+.wrap{max-width:1440px;margin:0 auto;padding-block:12px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:12px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.brand b{font-family:var(--display);font-weight:700;font-size:30px;letter-spacing:.02em;line-height:1}
+.brand span{color:var(--muted)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button{font:600 13px var(--body);cursor:pointer}
+.btn{border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);padding:7px 12px;border-radius:6px}
+.btn.ghost{background:var(--panel);color:var(--accent)}
+.btn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+select,input[type=text],input[type=number],input[type=date]{font:13px var(--body);color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:5px 7px}
+.grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:12px;align-items:start}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:grid;gap:10px;min-width:0}
+.card h3{margin:0;font-family:var(--display);font-weight:600;font-size:22px;line-height:1.1}
+.k{font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.mapbox{position:relative;background:#cfd8d2;border-radius:6px;overflow:hidden;line-height:0}
+canvas#map{width:100%;height:auto;display:block;cursor:crosshair;touch-action:manipulation}
+.tip{position:absolute;pointer-events:none;background:rgba(20,28,27,.88);color:#eef3f2;font:12px/1.35 var(--mono);padding:6px 8px;border-radius:4px;white-space:nowrap;transform:translate(12px,12px)}
+.layers{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.layers label{display:flex;gap:6px;align-items:center;font-size:13px}
+.slider{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.slider input[type=range]{flex:1;min-width:160px;accent-color:var(--water)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);line-height:1.3}
+.sw{display:inline-block;width:14px;height:10px;border-radius:2px;vertical-align:middle;margin-right:4px}
+.opts{display:grid;gap:8px}
+.opt{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:7px;padding:9px 10px;background:var(--panel);text-align:left;color:var(--ink);font:inherit;width:100%}
+.opt[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 3px 0 0 var(--ink)}
+.opt .dot{width:14px;height:14px;border-radius:50%}
+.opt b{font-weight:600}
+.opt .meta{font-size:12px;color:var(--muted)}
+.opt .price{font:600 15px var(--mono);text-align:right}
+.pill{display:inline-block;font:600 10.5px var(--mono);letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:3px;white-space:nowrap}
+.pill.best{background:var(--accent);color:var(--accent-ink)}
+.pill.risk{background:var(--sign);color:var(--sign-ink)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{border:1px solid var(--line);border-radius:6px;padding:8px 10px;display:grid;gap:1px;min-width:0}
+.stat .v{font-family:var(--display);font-weight:600;font-size:24px;line-height:1.05;font-variant-numeric:tabular-nums}
+.stat .s{font-size:11.5px;color:var(--muted)}
+.gantt{display:grid;gap:4px}
+.grow{display:grid;grid-template-columns:150px 1fr;gap:8px;align-items:center;font-size:12px}
+.gtrack{position:relative;height:14px;background:var(--hover);border-radius:3px}
+.gbar{position:absolute;top:0;height:14px;border-radius:3px}
+.gaxis{display:grid;grid-template-columns:150px 1fr;gap:8px;font:11px var(--mono);color:var(--muted)}
+.gaxis div:last-child{display:flex;justify-content:space-between}
+table.lines{width:100%;border-collapse:collapse;font-size:12.5px}
+table.lines td{padding:4px 4px;border-bottom:1px solid var(--line)}
+table.lines td.n{text-align:right;font-family:var(--mono);white-space:nowrap}
+.why{font-size:13.5px}
+.note{font-size:12px;color:var(--muted)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.set{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.set label{display:grid;gap:3px;font-size:12px;color:var(--muted)}
+.set select,.set input{width:100%}
+.scen{display:flex;gap:8px;flex-wrap:wrap}
+.scen button{font:600 13px var(--body);border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:8px 12px;border-radius:6px;text-align:left;display:grid;gap:1px}
+.scen button small{font:500 11px var(--mono);color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.scen button[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 -3px 0 var(--sign)}
+.callout{border-left:4px solid var(--sign);background:color-mix(in srgb,var(--sign) 10%,var(--panel));padding:10px 14px;border-radius:0 6px 6px 0;font-size:16px;line-height:1.45}
+.callout b{font-family:var(--display);font-size:20px;font-weight:600;letter-spacing:.01em}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:6px;font-size:13px;z-index:5}
+.busy{position:absolute;inset:0;display:grid;place-items:center;background:rgba(238,241,239,.55);font:600 14px var(--body);color:#17201f;line-height:1.4}
+@media (max-width:1020px){.grid{grid-template-columns:1fr}.set{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:460px){.stats{grid-template-columns:1fr 1fr}.grow,.gaxis{grid-template-columns:96px 1fr}}
 </style>
-</head>
-<body>
-<div class="bar"></div>
+
 <div class="wrap">
-  <div class="tag">UNHack 2026</div>
-  <h1>KEEPWAY</h1>
-  <p class="lede">Route, cost and schedule software for road builders that designs roads to stay open in floods, built from an engineering study of four First Nations whose only road keeps washing out.</p>
-  <div class="cards">
-    <a class="card" href="planner/"><span class="tag">Start here</span><b>Keepway Planner</b><span class="muted">Best and alternative routes on a flood map, with cost and completion date. Try Scenarios 1, 2 and 3.</span></a>
-    <a class="card" href="product/"><span class="tag">Tool</span><b>Crossing screener</b><span class="muted">Enter failing road crossings and get the cheapest fix, priced and ranked into a capital plan.</span></a>
-    <a class="card" href="prototype/"><span class="tag">Tool</span><b>Flood simulator</b><span class="muted">Push a flood up and watch today's road close while the fixed crossing stays open.</span></a>
+  <div class="bar">
+    <div class="brand"><b>Keepway Planner</b><span>Route, cost and schedule optimization for flood-resilient roads</span></div>
+    <div class="tools">
+      <select id="projectSel" aria-label="Saved projects"><option value="">Demo: northern access road</option></select>
+      <button class="btn ghost" id="saveBtn">Save project</button>
+      <button class="btn ghost" id="csvBtn">Export options</button>
+    </div>
   </div>
-  <div>
-    <h2 style="font:600 28px 'Barlow Condensed',sans-serif;margin:0 0 8px">Engineering study (files)</h2>
-    <ul>
-      <li><a href="Pitch_Summary.md">Pitch summary</a> · <a href="README.md">Study README and decision tables</a> · <a href="SUBMISSION.md">Submission text</a></li>
-      <li><a href="Construction_Cost_Workbook.xlsx">Construction cost workbook (.xlsx)</a> · <a href="Implementation_Timeline_Workbook.xlsx">Implementation timeline workbook (.xlsx)</a></li>
-      <li><a href="Graph1_Flood_vs_Road_Elevation.png">Graph 1: flood vs road elevation</a> · <a href="Graph2_Construction_Lifecycle_Costs.png">Graph 2: construction and lifecycle costs</a></li>
-      <li><a href="Source_Register.csv">Source register (217 entries, .csv)</a> · <a href="notes/">Research notes</a></li>
-    </ul>
+
+  <section class="card">
+    <div class="set">
+      <label for="roadClass">Road class<select id="roadClass"><option value="gravel">2-lane gravel, all-season</option><option value="paved">2-lane paved</option></select></label>
+      <label for="designT">Design flood<select id="designT"><option value="50">1-in-50 year</option><option value="100" selected>1-in-100 year</option><option value="200">1-in-200 year</option></select></label>
+      <label for="climate">Climate allowance<select id="climate"><option value="1">None</option><option value="1.15" selected>+15% flood stage</option><option value="1.3">+30% flood stage</option></select></label>
+      <label for="remote">Site access<select id="remote"><option value="1.0">Road-connected (×1.0)</option><option value="1.3" selected>Remote north (×1.3)</option><option value="1.6">Fly-in / winter road (×1.6)</option></select></label>
+      <label for="season">Construction months per year<input type="number" id="season" min="3" max="9" step="1" value="5"></label>
+      <label for="startDate">Project start<input type="date" id="startDate" value="2027-01-04"></label>
+      <label for="seed">Demo terrain<select id="seed"><option value="7">Boreal river valley</option><option value="21">Wetland plain</option><option value="44">Rolling upland</option></select></label>
+      <label for="demFile">Your terrain (ESRI .asc DEM)<input type="file" id="demFile" accept=".asc,.txt"></label>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="card">
+      <div class="scen" id="scen" role="group" aria-label="Demo scenarios"></div>
+      <div class="callout" id="callout"></div>
+      <div class="row" style="justify-content:space-between">
+        <div class="row">
+          <button class="btn on" id="modeA" aria-pressed="true">Place start</button>
+          <button class="btn ghost" id="modeB" aria-pressed="false">Place end</button>
+          <span class="note" id="hint">Click the map to move the start (A) or the end (B). Routes recompute.</span>
+        </div>
+      </div>
+      <div class="mapbox" id="mapbox">
+        <canvas id="map" width="960" height="600" role="img" aria-label="Terrain map with rivers, flood extent and candidate road routes"></canvas>
+        <div class="tip" id="tip" hidden></div>
+        <div class="busy" id="busy" hidden>Optimizing routes…</div>
+      </div>
+      <div class="slider">
+        <span class="k">Flood shown</span>
+        <input type="range" id="floodT" min="0" max="5" step="1" value="3" aria-label="Flood return period shown on the map">
+        <span class="mono" id="floodLbl">1-in-100 yr</span>
+      </div>
+      <div class="layers">
+        <label><input type="checkbox" id="lyFlood" checked> Flood extent</label>
+        <label><input type="checkbox" id="lyRoutes" checked> All routes</label>
+        <label><input type="checkbox" id="lyXing" checked> Crossings</label>
+        <label><input type="checkbox" id="lyShade" checked> Hillshade</label>
+      </div>
+      <div class="legend" id="legend"></div>
+      <p class="note" id="terrainNote"></p>
+    </section>
+
+    <section style="display:grid;gap:12px;min-width:0">
+      <div class="card">
+        <h3>Route options</h3>
+        <div class="opts" id="opts"></div>
+      </div>
+      <div class="card" id="detail"></div>
+    </section>
   </div>
-  <p class="muted" style="font-size:14px">Working prototype. The Planner runs on generated demo terrain and accepts real elevation data (ESRI ASCII grid). Costs are screening estimates in 2026 CAD (−50% / +100%), not quotes or stamped designs. Saving projects needs the hosted product; here, edits stay in your browser.</p>
+
+  <section class="card" id="schedCard"></section>
+  <p class="note">Screening-level (AACE Class 5) estimates in 2026 CAD: −50% / +100% range. Unit rates from Alberta Transportation 2026 unit price averages and Canadian northern-road benchmarks; flood depths from a height-above-nearest-drainage (HAND) screening model. Results guide alignment selection and budgeting before survey, geotechnical and hydraulic design; they are not a stamped design.</p>
 </div>
-</body>
-</html>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/*ENGINE-START*/
+const CELL=100;                // metres per grid cell
+const RATES={ exc:12, fill:24, rip:300, geo:7, bridge:5500 };
+const CLASS={ gravel:{base:1400,maint:6000,B:9}, paved:{base:2300,maint:9000,B:10} };
+const MARK={ mob:.05,temp:.04,env:.03,eng:.12,cont:.40 };
+const T_LIST=[2,10,25,100,200,500];
+
+function rng(seed){ let s=seed>>>0||1; return ()=>{ s^=s<<13; s>>>=0; s^=s>>17; s^=s<<5; s>>>=0; return s/4294967296; }; }
+function makeNoise(seed){
+  const r=rng(seed), N=256, perm=new Float32Array(N*N); for(let i=0;i<N*N;i++) perm[i]=r();
+  const at=(x,y)=>perm[((y&255)*N)+(x&255)];
+  const sm=t=>t*t*(3-2*t);
+  return (x,y)=>{ const xi=Math.floor(x), yi=Math.floor(y), xf=sm(x-xi), yf=sm(y-yi);
+    const a=at(xi,yi),b=at(xi+1,yi),c=at(xi,yi+1),d=at(xi+1,yi+1);
+    return (a+(b-a)*xf)+((c+(d-c)*xf)-(a+(b-a)*xf))*yf; };
+}
+function demoTerrain(seed,W=160,H=100){
+  const n=makeNoise(seed), fbm=(x,y,o)=>{ let v=0,a=1,f=1,t=0; for(let i=0;i<o;i++){ v+=a*n(x*f,y*f); t+=a; a*=.5; f*=2.03; } return v/t; };
+  const flat = seed===21 ? .45 : seed===44 ? 1.6 : 1;
+  const z=new Float32Array(W*H);
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+    const vc = H*.52 + 14*Math.sin(x/23+seed) + 6*Math.sin(x/9);
+    const valley = -28*Math.exp(-Math.pow((y-vc)/20,2));
+    z[y*W+x] = 365 + flat*(46*(fbm(x/38,y/38,5)-.5) + 10*(fbm(x/11+40,y/11,3)-.5)) + flat*valley - .14*x;
+  }
+  return {W,H,z,cell:CELL,demo:true,name:["","","",""][0]};
+}
+function parseAsc(text){
+  const lines=text.split(/\r?\n/); const hdr={}; let i=0;
+  for(;i<lines.length;i++){ const m=lines[i].trim().match(/^([a-zA-Z_]+)\s+(-?[\d.eE+-]+)$/); if(!m) break; hdr[m[1].toLowerCase()]=parseFloat(m[2]); }
+  const nc=hdr.ncols, nr=hdr.nrows, cs=hdr.cellsize, nd=hdr.nodata_value??-9999;
+  if(!nc||!nr||!cs) throw new Error("Not an ESRI ASCII grid: missing ncols, nrows or cellsize.");
+  const vals=lines.slice(i).join(" ").trim().split(/\s+/).map(Number);
+  if(vals.length<nc*nr) throw new Error(`The grid says ${nc}×${nr} cells but has ${vals.length} values.`);
+  const step=Math.max(1,Math.ceil(Math.max(nc/200,nr/140)));
+  const W=Math.floor(nc/step), H=Math.floor(nr/step), z=new Float32Array(W*H);
+  let mean=0,cnt=0; for(const v of vals.slice(0,nc*nr)) if(v!==nd&&isFinite(v)){mean+=v;cnt++;} mean/=Math.max(cnt,1);
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){ const v=vals[(y*step)*nc+(x*step)]; z[y*W+x]=(v===nd||!isFinite(v))?mean:v; }
+  return {W,H,z,cell:cs*step,demo:false};
+}
+class Heap{ constructor(){this.k=[];this.v=[];} get size(){return this.k.length;}
+  push(key,val){ const k=this.k,v=this.v; let i=k.length; k.push(key); v.push(val);
+    while(i>0){ const p=(i-1)>>1; if(k[p]<=key) break; k[i]=k[p]; v[i]=v[p]; i=p; } k[i]=key; v[i]=val; }
+  pop(){ const k=this.k,v=this.v, top=v[0], last=k.pop(), lv=v.pop(); if(k.length){ let i=0; const n=k.length;
+    for(;;){ let l=2*i+1, r=l+1, m=i; let mk=last; if(l<n&&k[l]<mk){m=l;mk=k[l];} if(r<n&&k[r]<mk){m=r;} if(m===i) break; k[i]=k[m]; v[i]=v[m]; i=m; } k[i]=last; v[i]=lv; } return top; } }
+const DX=[1,1,0,-1,-1,-1,0,1], DY=[0,1,1,1,0,-1,-1,-1];
+function hydrology(T){
+  const {W,H,z}=T, N=W*H, f=new Float32Array(z), done=new Uint8Array(N), h=new Heap();
+  for(let x=0;x<W;x++){ for(const y of [0,H-1]){ const i=y*W+x; if(!done[i]){done[i]=1;h.push(f[i],i);} } }
+  for(let y=0;y<H;y++){ for(const x of [0,W-1]){ const i=y*W+x; if(!done[i]){done[i]=1;h.push(f[i],i);} } }
+  const order=[];
+  while(h.size){ const i=h.pop(); order.push(i); const x=i%W,y=(i/W)|0;
+    for(let d=0;d<8;d++){ const nx=x+DX[d],ny=y+DY[d]; if(nx<0||ny<0||nx>=W||ny>=H) continue; const j=ny*W+nx; if(done[j]) continue; done[j]=1; if(f[j]<=f[i]) f[j]=f[i]+1e-3; h.push(f[j],j); } }
+  const dir=new Int32Array(N).fill(-1);
+  for(let i=0;i<N;i++){ const x=i%W,y=(i/W)|0; let best=-1,bs=0;
+    for(let d=0;d<8;d++){ const nx=x+DX[d],ny=y+DY[d]; if(nx<0||ny<0||nx>=W||ny>=H) continue; const j=ny*W+nx; const s=(f[i]-f[j])/(d%2?1.414:1); if(s>bs){bs=s;best=j;} }
+    dir[i]=best; }
+  const acc=new Float32Array(N).fill(1);
+  for(let k=order.length-1;k>=0;k--){ const i=order[k]; if(dir[i]>=0) acc[dir[i]]+=acc[i]; }
+  const cellKm2=(T.cell*T.cell)/1e6, chanThr=Math.max(20,Math.round(1.5/cellKm2));
+  const chan=new Uint8Array(N); for(let i=0;i<N;i++) if(acc[i]>=chanThr) chan[i]=1;
+  const near=new Int32Array(N).fill(-2);
+  const findCh=i=>{ const path=[]; let c=i; while(c>=0&&near[c]===-2&&!chan[c]){ path.push(c); c=dir[c]; }
+    const r = c<0 ? -1 : chan[c] ? c : near[c]; for(const p of path) near[p]=r; if(c>=0&&chan[c]) near[c]=c; return r; };
+  const hand=new Float32Array(N), area=new Float32Array(N), slope=new Float32Array(N);
+  for(let i=0;i<N;i++){ const c=findCh(i); if(c<0){ hand[i]=50; area[i]=0; } else { hand[i]=Math.max(0,z[i]-z[c]); area[i]=acc[c]*cellKm2; } }
+  for(let i=0;i<N;i++){ const x=i%W,y=(i/W)|0; const zx=(z[y*W+Math.min(W-1,x+1)]-z[y*W+Math.max(0,x-1)])/(2*T.cell), zy=(z[Math.min(H-1,y+1)*W+x]-z[Math.max(0,y-1)*W+x])/(2*T.cell); slope[i]=Math.hypot(zx,zy); }
+  return {f,dir,acc,chan,hand,area,slope,cellKm2};
+}
+function stage(Tyr,A,clim){ return .25*Math.pow(Math.max(A,.5),.35)*(1+.45*Math.log(Tyr/2))*clim; }
+function depthAt(Hy,i,Tyr,clim){ return stage(Tyr,Hy.area[i],clim)-Hy.hand[i]; }
+function structFor(A,Tyr){ const k=Math.pow(Tyr/100,.1);
+  if(A<8)   return {type:"Culvert set (twin 1800 mm)", cost:(250000+A*40000)*k, months:.6, span:0};
+  if(A<80)  return {type:"Structural-plate arch", cost:(600000+A*9000)*k, months:1.5, span:0};
+  const span=Math.min(120,Math.round(12+3.2*Math.sqrt(A))); return {type:`Bridge, ${span} m span`, cost:span*11*RATES.bridge*k, months:3+span/12, span}; }
+function stepCost(T,Hy,P,a,b,diag,existing){
+  const L=T.cell*(diag?1.4142:1), cls=CLASS[P.roadClass], B=cls.B, S=3;
+  const dz=Math.abs(T.z[b]-T.z[a]), e=Math.max(0,dz-.06*L);
+  const d=depthAt(Hy,b,P.designT,P.clim), fb=.5, raise=d>-fb? d+fb : 0;
+  const wet = Hy.slope[b]<.006 && Hy.hand[b]<1.2;
+  let cap = existing ? L*260 : L*cls.base, months = existing ? L/4000 : L/1500*(wet?2.5:1);
+  const cutVol = existing?0: L*(e/2)*(B+S*e/2); cap+=cutVol*RATES.exc*1.6; months+=cutVol/45000;
+  if(wet&&!existing) cap+=L*600;
+  let fillVol=0;
+  if(raise>0){ const H0=1, add=(H0+raise)*(B+S*(H0+raise))-H0*(B+S*H0); fillVol=L*add; cap+=fillVol*RATES.fill+L*B*.2*2.2*34;
+    if(d>.5) cap+=L*2*(H0+raise)*3.16*.45*RATES.rip*.5; months+=fillVol/30000; }
+  let xing=null;
+  let ch = Hy.chan[b]?b:-1;
+  if(ch<0&&diag){ const W=T.W, ax=a%W, ay=(a/W)|0, bx=b%W, by=(b/W)|0; const o1=ay*W+bx, o2=by*W+ax; if(Hy.chan[o1]) ch=o1; else if(Hy.chan[o2]) ch=o2; }
+  if(ch>=0){ const s=structFor(Hy.acc[ch]*Hy.cellKm2,P.designT); xing={...s,cell:ch,A:Hy.acc[ch]*Hy.cellKm2}; cap+=s.cost; months+=s.months*.5; }
+  return {L,cap,months,raise,d,wet,fillVol,cutVol,xing,from:a};
+}
+const OBJ={
+  oldroad:{ label:"Existing road", w:(c,T,Hy,b)=>c.L*(1+30*Math.abs(T.z[b]-T.z[c.from])/c.L+(Hy.hand[b]<.8?1.5:0)+.25*Math.min(Hy.hand[b],12)/12)+(c.xing?c.L*4:0) },
+  cost:   { label:"Lowest lifecycle cost", w:(c,T,Hy,b,P)=>c.cap+c.L*CLASS[P.roadClass].maint/1000*19.6 },
+  flood:  { label:"Highest ground", w:(c,T,Hy,b,P)=>c.cap*.6 + c.L*2500*Math.max(0,6-Hy.hand[b]) + (c.xing? c.xing.cost*2 : 0) },
+  short:  { label:"Shortest drive", w:(c,T,Hy,b,P)=>c.cap*.15 + c.L*CLASS[P.roadClass].base*.85 }
+};
+function route(T,Hy,P,s,t,obj,existing){
+  const {W,H}=T, N=W*H, g=new Float64Array(N).fill(Infinity), prev=new Int32Array(N).fill(-1), closed=new Uint8Array(N), h=new Heap();
+  const tx=t%W, ty=(t/W)|0;
+  const hmin = obj==="oldroad"?T.cell : obj==="flood"? T.cell*CLASS[P.roadClass].base*.6 : T.cell*CLASS[P.roadClass].base;
+  const heur=i=>{ const x=i%W,y=(i/W)|0, dx=Math.abs(x-tx), dy=Math.abs(y-ty); return (Math.max(dx,dy)+.4142*Math.min(dx,dy))*hmin/T.cell*T.cell/T.cell; };
+  g[s]=0; h.push(heur(s),s);
+  while(h.size){ const a=h.pop(); if(closed[a]) continue; closed[a]=1; if(a===t) break; const ax=a%W, ay=(a/W)|0;
+    for(let d=0;d<8;d++){ const nx=ax+DX[d],ny=ay+DY[d]; if(nx<0||ny<0||nx>=W||ny>=H) continue; const b=ny*W+nx; if(closed[b]) continue;
+      const c=stepCost(T,Hy,P,a,b,d%2===1,existing); const ng=g[a]+OBJ[obj].w(c,T,Hy,b,P);
+      if(ng<g[b]){ g[b]=ng; prev[b]=a; h.push(ng+heur(b),b); } } }
+  const path=[]; for(let c=t;c>=0;c=prev[c]) path.push(c); path.reverse(); return path[0]===s?path:[];
+}
+function evaluatePath(T,Hy,P,path,existing){
+  const W=T.W; let len=0,direct=0,months=0,fill=0,cut=0,wetKm=0,floodKm=0,maxRaise=0; const xs=[]; const seen=new Set(); let worstT=Infinity;
+  for(let k=1;k<path.length;k++){ const a=path[k-1], b=path[k]; const diag=(a%W!==b%W)&&(((a/W)|0)!==((b/W)|0));
+    const c=stepCost(T,Hy,P,a,b,diag,existing);
+    len+=c.L; months+=c.months; fill+=c.fillVol; cut+=c.cutVol; if(c.wet) wetKm+=c.L/1000; if(c.d>0) floodKm+=c.L/1000; maxRaise=Math.max(maxRaise,c.raise);
+    let capNoX=c.cap; if(c.xing){ capNoX-=c.xing.cost; if(!seen.has(c.xing.cell)){ seen.add(c.xing.cell); xs.push(c.xing); } }
+    direct+=capNoX;
+    for(const Ty of T_LIST){ if(depthAt(Hy,b,Ty,P.clim)>0){ worstT=Math.min(worstT,Ty); break; } } }
+  // merge crossings that are neighbours on the same stream
+  const structs=[]; for(const x of xs){ const near=structs.find(s=>Math.abs(s.cell%W-x.cell%W)<=2&&Math.abs(((s.cell/W)|0)-((x.cell/W)|0))<=2); if(!near) structs.push(x); else if(x.A>near.A) Object.assign(near,x); }
+  const structCost=structs.reduce((s,x)=>s+x.cost,0); direct+=structCost;
+  const bridges=structs.filter(s=>s.span>0).length;
+  const cons=direct*(1+MARK.mob+MARK.temp+MARK.env), soft=150000+cons*.03+(wetKm>2?250000:0)+bridges*120000;
+  const mid=(cons*(1+MARK.eng)+soft)*(1+MARK.cont)*P.remote;
+  const maintYr=len/1000*CLASS[P.roadClass].maint*(existing?1.1:1);
+  const lc=mid+maintYr*19.6;
+  const overtopT = existing ? worstT : Math.max(P.designT, worstT===Infinity?500:P.designT);
+  const closuresPerDecade = existing ? (worstT===Infinity?0:10/worstT) : 10/P.designT;
+  const constrMonths = months/1 + structs.reduce((s,x)=>s+x.months,0)*.5;
+  return {path,len,direct,mid,low:mid*.5,high:mid*2,maintYr,lc,months:constrMonths,fill,cut,wetKm,floodKm,maxRaise,structs,bridges,worstT,closuresPerDecade};
+}
+function schedule(r,P){
+  const pre=[["Feasibility, survey & LiDAR",4],["Consultation & engagement",6],["Hydrology, geotech & design",8+(r.bridges?3:0)],["Environmental review & permits",5+(r.wetKm>2?5:0)+(r.bridges?3:0)],["Funding & procurement",5]];
+  // design overlaps consultation; permits overlap design's second half
+  const phases=[]; let t=0;
+  phases.push({name:pre[0][0],start:0,dur:pre[0][1]}); t=pre[0][1];
+  phases.push({name:pre[1][0],start:t-1,dur:pre[1][1]});
+  phases.push({name:pre[2][0],start:t+1,dur:pre[2][1]});
+  const dEnd=t+1+pre[2][1];
+  phases.push({name:pre[3][0],start:dEnd-Math.ceil(pre[3][1]/2),dur:pre[3][1]});
+  const pEnd=Math.max(dEnd,dEnd-Math.ceil(pre[3][1]/2)+pre[3][1]);
+  phases.push({name:pre[4][0],start:pEnd,dur:pre[4][1]});
+  const preEnd=pEnd+pre[4][1];
+  const sm=P.season, seasons=Math.max(1,Math.ceil(r.months/sm));
+  const startMonth = P.start.getMonth(); // 0-based
+  const seasonStart = 5; // June
+  let cs = preEnd; const absAt=m=>(startMonth+m)%12; while(absAt(cs)!==seasonStart) cs++;
+  const constrCal=(seasons-1)*12+(r.months-(seasons-1)*sm);
+  phases.push({name:`Construction (${seasons} season${seasons>1?"s":""})`,start:cs,dur:Math.max(1,constrCal),build:true,seasons});
+  phases.push({name:"Inspection & opening",start:cs+constrCal,dur:1.5});
+  const total=cs+constrCal+1.5;
+  const add=(d,m)=>{ const x=new Date(d); x.setMonth(x.getMonth()+Math.round(m)); return x; };
+  return {phases,total,seasons,likely:add(P.start,total),earliest:add(P.start,total-Math.min(6,preEnd*.2)),delayed:add(P.start,total+preEnd*.35+12),firstBenefit:add(P.start,cs+Math.min(sm,constrCal))};
+}
+/*ENGINE-END*/
+
+/* ===== App ===== */
+const $=id=>document.getElementById(id);
+const fmt$=v=>v>=1e9?"$"+(v/1e9).toFixed(2)+"B":v>=1e6?"$"+(v/1e6).toFixed(v>=1e8?0:1)+"M":"$"+Math.round(v/1e3)+"k";
+const fmtD=d=>d.toLocaleDateString("en-CA",{month:"short",year:"numeric"});
+const OPT_DEF=[
+  {id:"upgrade",obj:"oldroad",existing:true,label:"Upgrade the existing road",sub:"Same alignment: raise flood-prone sections, replace crossings",color:"--o4"},
+  {id:"cost",obj:"cost",label:"New route: lowest lifecycle cost",sub:"Cheapest to build and maintain over 30 years",color:"--o1"},
+  {id:"flood",obj:"flood",label:"New route: highest ground",sub:"Stays well above streams, even when longer",color:"--o3"},
+  {id:"short",obj:"short",label:"New route: shortest drive",sub:"Most direct line; pays for bigger crossings",color:"--o2"}
+];
+let TER=null, HY=null, A=null, B=null, mode="A", results=[], sel="cost", oldPath=[], db=null, canWrite=false, projects=[];
+const P=()=>({roadClass:$("roadClass").value,designT:+$("designT").value,clim:+$("climate").value,remote:+$("remote").value,season:Math.min(9,Math.max(3,+$("season").value||5)),start:new Date($("startDate").value||"2027-01-04")});
+function toast(t){ const el=$("toast"); el.textContent=t; el.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>el.hidden=true,2600); }
+function css(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+function loadTerrain(T,keepPts){
+  TER=T; HY=hydrology(T); base=null; floodCache=null;
+  if(!keepPts||!A||!B){ A=pickBank(3); B=pickBank(T.W-4); }
+  $("terrainNote").textContent = T.demo ? `Demo terrain (generated, ${(T.W*T.cell/1000).toFixed(0)} × ${(T.H*T.cell/1000).toFixed(0)} km, ${T.cell} m cells). Upload a surveyed DEM to run it on your site.` : `Your DEM: ${T.W} × ${T.H} cells at ${T.cell} m (${(T.W*T.cell/1000).toFixed(1)} × ${(T.H*T.cell/1000).toFixed(1)} km). Kept in this browser only.`;
+  // the existing road: an old alignment that hugs the low, easy ground
+  oldPath = route(TER,HY,P(),A,B,"oldroad",false);
+  run();
+}
+function pickBank(x){ // a dry-ish cell near the main valley at column x
+  const {W,H}=TER; let best=-1,bs=Infinity; for(let y=4;y<H-4;y++){ const i=y*W+x; const sc=TER.z[i]+(HY.chan[i]?50:0)+(HY.hand[i]<1.5?30:0); if(sc<bs){bs=sc;best=i;} } return best; }
+function run(){
+  $("busy").hidden=false;
+  setTimeout(()=>{
+    const p=P();
+    oldPath = route(TER,HY,p,A,B,"oldroad",false);
+    results = OPT_DEF.map(o=>{ const path = o.existing? oldPath : route(TER,HY,p,A,B,o.obj,false); const r=evaluatePath(TER,HY,p,path,!!o.existing); r.sched=schedule(r,p); return {...o,...r}; });
+    // recommendation: best balance of lifecycle cost, time and residual flood exposure
+    const minLc=Math.min(...results.map(r=>r.lc)), minM=Math.min(...results.map(r=>r.sched.total));
+    results.forEach(r=>{ r.score = .5*(minLc/r.lc) + .3*(minM/r.sched.total) + .2*(r.floodKm<0.01?1: Math.max(0,1-r.floodKm/Math.max(...results.map(x=>x.floodKm),1))) ; });
+    const best=results.reduce((a,b)=>b.score>a.score?b:a); results.forEach(r=>r.best=r===best);
+    if(!results.find(r=>r.id===sel)) sel=best.id;
+    if(scen){ sel=scen.sel; $("callout").innerHTML=scen.say(results)+` <span class="note">Illustrative demo terrain.</span>`; }
+    $("busy").hidden=true; renderOpts(); renderDetail(); draw();
+  },20);
+}
+
+/* --- presentation scenarios (illustrative terrain) --- */
+const SCEN=[
+  {id:1,tag:"Scenario 1",name:"Upgrade the old road",seed:7,A:3203,B:12956,sel:"upgrade",T:3,
+   say:r=>{const up=r.find(x=>x.id==="upgrade"), nw=r.filter(x=>!x.existing).reduce((a,b)=>b.mid<a.mid?b:a); return `<b>The cheapest fix is often the road you already have.</b> Raising its ${up.floodKm.toFixed(1)} km of flood-prone sections and replacing ${up.structs.length} crossings costs <b>${fmt$(up.mid)}</b>, against ${fmt$(nw.mid)} for the cheapest new alignment, and it opens ${fmtD(up.sched.likely)}.`;}},
+  {id:2,tag:"Scenario 2",name:"Move it to higher ground",seed:7,A:7590,B:8150,sel:"cost",T:3,
+   say:r=>{const up=r.find(x=>x.id==="upgrade"), c=r.find(x=>x.id==="cost"); return `<b>When the old road sits in the floodplain, move it.</b> The existing line has ${up.floodKm.toFixed(1)} km under the design flood and needs raises of up to ${up.maxRaise.toFixed(1)} m${up.bridges?" and a bridge":""}: ${fmt$(up.mid)}. A new ${(c.len/1000).toFixed(1)} km line on higher ground costs <b>${fmt$(c.mid)}</b> and needs ${c.months.toFixed(0)} crew-months instead of ${up.months.toFixed(0)}.`;}},
+  {id:3,tag:"Scenario 3",name:"Shortest isn’t cheapest",seed:7,A:8003,B:8156,sel:"flood",T:3,
+   say:r=>{const sh=r.find(x=>x.id==="short"), hg=r.find(x=>x.id==="flood"); return `<b>The straight line is the expensive one.</b> The shortest drive (${(sh.len/1000).toFixed(1)} km) crosses the floodplain${sh.bridges?" and needs a bridge":""}: ${fmt$(sh.mid)}. Going ${((hg.len-sh.len)/1000).toFixed(1)} km further on higher ground costs <b>${fmt$(hg.mid)}</b>, with ${hg.floodKm.toFixed(1)} km exposed to the design flood.`;}}
+];
+let scen=null;
+function renderScen(){
+  $("scen").innerHTML=SCEN.map(s=>`<button data-id="${s.id}" aria-pressed="${scen&&scen.id===s.id}"><small>${s.tag}</small>${s.name}</button>`).join("")+`<button data-id="0" aria-pressed="${!scen}"><small>Free play</small>Click your own A and B</button>`;
+  $("scen").querySelectorAll("button").forEach(b=>b.onclick=()=>{ const s=SCEN.find(x=>x.id===+b.dataset.id); if(s) loadScenario(s); else { scen=null; renderScen(); $("callout").innerHTML="<b>Free play.</b> Click the map to place the start (A) and the end (B). Every option, cost and schedule recomputes."; } });
+}
+function loadScenario(s){
+  scen=s; $("seed").value=String(s.seed); $("roadClass").value="gravel"; $("designT").value="100"; $("climate").value="1.15"; $("remote").value="1.3"; $("season").value="5"; $("startDate").value="2027-01-04";
+  $("floodT").value=String(s.T); $("floodLbl").textContent=`1-in-${T_LIST[s.T]} yr`;
+  if(!TER||!TER.demo||TER.seed!==s.seed){ base=null; const T=demoTerrain(s.seed); T.seed=s.seed; TER=T; HY=hydrology(T); }
+  A=s.A; B=s.B; sel=s.sel; renderScen(); loadTerrain(TER,true);
+}
+
+/* --- map --- */
+const cv=$("map"), ctx=cv.getContext("2d"); let base=null;
+function elevColor(t){ // t 0..1
+  const stops=[[0,[96,138,92]],[.35,[146,166,104]],[.6,[186,170,120]],[.8,[160,132,96]],[1,[214,208,198]]];
+  for(let i=1;i<stops.length;i++) if(t<=stops[i][0]){ const [a,ca]=stops[i-1],[b,cb]=stops[i], k=(t-a)/(b-a); return ca.map((v,j)=>v+(cb[j]-v)*k); }
+  return stops[stops.length-1][1];
+}
+// Rendering: the canvas is sized to the screen's real pixels, and terrain, shading and flood are drawn per pixel with
+// bilinear blending between grid cells, so nothing is a stretched low-res image.
+let K=1, floodCache=null;
+function sizeCanvas(){
+  const cssW=Math.max(320,$("mapbox").clientWidth||960), dpr=Math.min(window.devicePixelRatio||1,2.5);
+  const w=Math.min(3000,Math.round(cssW*dpr)), h=Math.round(w*TER.H/TER.W);
+  if(cv.width!==w||cv.height!==h){ cv.width=w; cv.height=h; base=null; floodCache=null; }
+  K=cv.width/960;
+}
+function bilerp(g,W,H,fx,fy){ // fx,fy in cell units, cell centres at i+.5
+  let u=fx-.5, v=fy-.5; if(u<0)u=0; if(v<0)v=0; if(u>W-1)u=W-1; if(v>H-1)v=H-1;
+  const x0=u|0, y0=v|0, x1=Math.min(W-1,x0+1), y1=Math.min(H-1,y0+1), a=u-x0, b=v-y0;
+  const p=g[y0*W+x0], q=g[y0*W+x1], r=g[y1*W+x0], t=g[y1*W+x1];
+  return (p+(q-p)*a)*(1-b)+(r+(t-r)*a)*b;
+}
+function renderBase(){
+  const {W,H,z}=TER; let mn=Infinity,mx=-Infinity; for(const v of z){ if(v<mn)mn=v; if(v>mx)mx=v; }
+  const shade=$("lyShade").checked, tN=new Float32Array(W*H), sh=new Float32Array(W*H);
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){ const i=y*W+x; tN[i]=(z[i]-mn)/(mx-mn||1);
+    let s=1; if(shade){ const zx=z[y*W+Math.min(W-1,x+1)]-z[y*W+Math.max(0,x-1)], zy=z[Math.min(H-1,y+1)*W+x]-z[Math.max(0,y-1)*W+x]; s=Math.max(.55,Math.min(1.25,1-(zx*.7+zy*.7)/(TER.cell*.08))); } sh[i]=s; }
+  const PW=cv.width, PH=cv.height, img=ctx.createImageData(PW,PH), d=img.data, sxk=W/PW, syk=H/PH;
+  const LUT=[]; for(let k=0;k<=255;k++) LUT.push(elevColor(k/255));
+  for(let py=0;py<PH;py++){ const fy=(py+.5)*syk; for(let px=0;px<PW;px++){ const fx=(px+.5)*sxk;
+    const t=bilerp(tN,W,H,fx,fy), s=bilerp(sh,W,H,fx,fy), c=LUT[Math.max(0,Math.min(255,Math.round(t*255)))], o=(py*PW+px)*4;
+    d[o]=c[0]*s; d[o+1]=c[1]*s; d[o+2]=c[2]*s; d[o+3]=255; } }
+  base={img,mn,mx};
+}
+function renderFlood(Ty,clim){
+  const {W,H}=TER, g=new Float32Array(W*H); for(let i=0;i<W*H;i++) g[i]=depthAt(HY,i,Ty,clim);
+  const PW=cv.width, PH=cv.height, off=document.createElement("canvas"); off.width=PW; off.height=PH;
+  const octx=off.getContext("2d"), img=octx.createImageData(PW,PH), d=img.data, sxk=W/PW, syk=H/PH;
+  for(let py=0;py<PH;py++){ const fy=(py+.5)*syk; for(let px=0;px<PW;px++){ const v=bilerp(g,W,H,(px+.5)*sxk,fy); if(v<=0) continue;
+    const o=(py*PW+px)*4, a=Math.min(.75,.3+v*.18); d[o]=40; d[o+1]=110; d[o+2]=190; d[o+3]=a*255; } }
+  octx.putImageData(img,0,0); floodCache={key:Ty+"|"+clim+"|"+PW,off};
+}
+function sx(i){ return ((i%TER.W)+.5)*cv.width/TER.W; } function sy(i){ return ((((i/TER.W)|0))+.5)*cv.height/TER.H; }
+function draw(){
+  if(!TER) return; sizeCanvas(); if(!base) renderBase();
+  const {W,H}=TER;
+  ctx.putImageData(base.img,0,0);
+  const Ty=T_LIST[+$("floodT").value], p=P();
+  if($("lyFlood").checked){ const key=Ty+"|"+p.clim+"|"+cv.width; if(!floodCache||floodCache.key!==key) renderFlood(Ty,p.clim); ctx.drawImage(floodCache.off,0,0); }
+  // streams
+  ctx.strokeStyle="#2a62a8"; ctx.lineCap="round"; ctx.lineJoin="round";
+  for(let i=0;i<W*H;i++){ if(!HY.chan[i]||HY.dir[i]<0) continue; const A_=HY.acc[i]*HY.cellKm2; ctx.lineWidth=K*Math.min(6,1+Math.log10(A_+1)*1.6); ctx.beginPath(); ctx.moveTo(sx(i),sy(i)); ctx.lineTo(sx(HY.dir[i]),sy(HY.dir[i])); ctx.stroke(); }
+  // routes
+  const order=[...results].sort((a,b)=>(a.id===sel)-(b.id===sel));
+  for(const r of order){ if(!$("lyRoutes").checked&&r.id!==sel) continue; if(!r.path.length) continue;
+    const on=r.id===sel;
+    ctx.strokeStyle="rgba(255,255,255,.9)"; ctx.lineWidth=K*(on?9:6); ctx.setLineDash(r.existing?[10*K,6*K]:[]); poly(r.path);
+    ctx.strokeStyle=css(r.color); ctx.lineWidth=K*(on?5:3); poly(r.path); ctx.setLineDash([]);
+    if(on&&$("lyXing").checked) for(const s of r.structs){ const x=sx(s.cell), y=sy(s.cell), q=7*K; ctx.fillStyle="#fff"; ctx.strokeStyle="#17201f"; ctx.lineWidth=2*K;
+      if(s.span){ ctx.fillRect(x-q,y-q,2*q,2*q); ctx.strokeRect(x-q,y-q,2*q,2*q); } else { ctx.beginPath(); ctx.arc(x,y,6*K,0,7); ctx.fill(); ctx.stroke(); } } }
+  pin(A,"A"); pin(B,"B");
+  // scale bar
+  const km=Math.max(1,Math.round(TER.W*TER.cell/1000/5)), px=km*1000/TER.cell*cv.width/TER.W;
+  ctx.fillStyle="rgba(255,255,255,.88)"; ctx.fillRect(12*K,cv.height-34*K,px+16*K,24*K); ctx.fillStyle="#17201f"; ctx.fillRect(20*K,cv.height-18*K,px,4*K); ctx.font=`${12*K}px IBM Plex Mono, monospace`; ctx.fillText(km+" km",22*K,cv.height-22*K);
+  $("legend").innerHTML=`<span><span class="sw" style="background:#2a62a8"></span>Streams (width = catchment)</span><span><span class="sw" style="background:rgba(40,110,190,.55)"></span>Flooded at 1-in-${Ty} yr</span>${results.map(r=>`<span><span class="sw" style="background:${css(r.color)}"></span>${r.label}</span>`).join("")}<span>● culvert/arch ■ bridge</span>`;
+}
+function poly(path){ // smoothed: quadratic curves through segment midpoints, so grid steps don't show as zig-zags
+  if(path.length<2) return; ctx.beginPath(); ctx.moveTo(sx(path[0]),sy(path[0]));
+  for(let k=1;k<path.length-1;k++){ const x=sx(path[k]), y=sy(path[k]), mx=(x+sx(path[k+1]))/2, my=(y+sy(path[k+1]))/2; ctx.quadraticCurveTo(x,y,mx,my); }
+  const l=path[path.length-1]; ctx.lineTo(sx(l),sy(l)); ctx.stroke(); }
+function pin(i,t){ const x=sx(i),y=sy(i); ctx.fillStyle="#17201f"; ctx.beginPath(); ctx.arc(x,y,12*K,0,7); ctx.fill(); ctx.strokeStyle="#f2a20c"; ctx.lineWidth=2*K; ctx.stroke(); ctx.fillStyle="#f2a20c"; ctx.font=`bold ${14*K}px IBM Plex Sans, sans-serif`; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(t,x,y+K); ctx.textAlign="left"; ctx.textBaseline="alphabetic"; }
+let rsT=null; window.addEventListener("resize",()=>{ clearTimeout(rsT); rsT=setTimeout(()=>{ if(TER) draw(); },150); });
+function cellAt(ev){ const r=cv.getBoundingClientRect(); const x=Math.floor((ev.clientX-r.left)/r.width*TER.W), y=Math.floor((ev.clientY-r.top)/r.height*TER.H); if(x<0||y<0||x>=TER.W||y>=TER.H) return -1; return y*TER.W+x; }
+cv.addEventListener("click",ev=>{ const c=cellAt(ev); if(c<0) return; if(mode==="A") A=c; else B=c; if(A===B) return; if(scen){ scen=null; renderScen(); $("callout").innerHTML="<b>Free play.</b> Your own route: every option, cost and schedule recomputed."; } run(); });
+cv.addEventListener("mousemove",ev=>{ const c=cellAt(ev), tip=$("tip"); if(c<0){ tip.hidden=true; return; } const p=P(), d=depthAt(HY,c,+$("designT").value,p.clim);
+  const r=$("mapbox").getBoundingClientRect(); tip.style.left=(ev.clientX-r.left)+"px"; tip.style.top=(ev.clientY-r.top)+"px"; tip.hidden=false;
+  tip.textContent=`${TER.z[c].toFixed(1)} m · ${HY.hand[c].toFixed(1)} m above stream · ${d>0?`floods ${d.toFixed(1)} m at 1-in-${$("designT").value}`:"dry at design flood"}${HY.chan[c]?` · stream, ${(HY.acc[c]*HY.cellKm2).toFixed(1)} km²`:""}`; });
+cv.addEventListener("mouseleave",()=>$("tip").hidden=true);
+function setMode(m){ mode=m; $("modeA").className="btn "+(m==="A"?"on":"ghost"); $("modeB").className="btn "+(m==="B"?"on":"ghost"); $("modeA").setAttribute("aria-pressed",m==="A"); $("modeB").setAttribute("aria-pressed",m==="B"); }
+$("modeA").onclick=()=>setMode("A"); $("modeB").onclick=()=>setMode("B");
+$("floodT").oninput=()=>{ $("floodLbl").textContent=`1-in-${T_LIST[+$("floodT").value]} yr`; draw(); };
+["lyFlood","lyRoutes","lyXing"].forEach(id=>$(id).onchange=draw);
+$("lyShade").onchange=()=>{ base=null; draw(); };
+["roadClass","designT","climate","remote","season","startDate"].forEach(id=>$(id).addEventListener("change",run));
+$("seed").onchange=()=>{ base=null; scen=null; renderScen(); $("callout").innerHTML="<b>Free play.</b> New demo terrain loaded."; const T=demoTerrain(+$("seed").value); T.seed=+$("seed").value; loadTerrain(T,false); };
+$("demFile").onchange=async e=>{ const f=e.target.files[0]; if(!f) return; try{ const T=parseAsc(await f.text()); base=null; scen=null; renderScen(); $("callout").innerHTML="<b>Your terrain.</b> Place A and B on your road."; loadTerrain(T,false); toast("Loaded your terrain"); }catch(err){ toast(err.message); } };
+
+/* --- panels --- */
+function renderOpts(){
+  $("opts").innerHTML=results.map(r=>`<button class="opt" aria-pressed="${r.id===sel}" data-id="${r.id}">
+    <span class="dot" style="background:${css(r.color)}"></span>
+    <span><b>${r.label}</b> ${r.best?'<span class="pill best">Recommended</span>':""}${r.floodKm>0.5?` <span class="pill risk">${r.floodKm.toFixed(1)} km in floodplain</span>`:""}<br><span class="meta">${(r.len/1000).toFixed(1)} km · ${r.structs.length} crossings · opens ${fmtD(r.sched.likely)}</span></span>
+    <span class="price">${fmt$(r.mid)}<br><span class="meta">${fmt$(r.low)}–${fmt$(r.high)}</span></span></button>`).join("");
+  $("opts").querySelectorAll(".opt").forEach(b=>b.onclick=()=>{ sel=b.dataset.id; renderOpts(); renderDetail(); draw(); });
+}
+function why(r){
+  const others=results.filter(x=>x!==r);
+  const cheaper=others.filter(x=>x.lc<r.lc).length===0;
+  const parts=[];
+  if(r.existing) parts.push(`Keeps the ${(r.len/1000).toFixed(1)} km alignment people already use and raises ${r.floodKm.toFixed(1)} km that floods at the design event by up to ${r.maxRaise.toFixed(1)} m.`);
+  else parts.push(`A new ${(r.len/1000).toFixed(1)} km alignment with ${r.structs.length} stream crossing${r.structs.length===1?"":"s"}${r.bridges?`, ${r.bridges} needing a bridge`:""}.`);
+  if(r.wetKm>.5) parts.push(`${r.wetKm.toFixed(1)} km crosses wet, flat ground, which slows construction and adds fill and geotextile.`);
+  if(cheaper) parts.push("Lowest 30-year cost of the four.");
+  parts.push(`Built to stay open in the 1-in-${P().designT} flood with ${P().clim>1?"a climate allowance and ":""}0.5 m freeboard.`);
+  return parts.join(" ");
+}
+function renderDetail(){
+  const r=results.find(x=>x.id===sel); if(!r) return; const p=P();
+  const rows=[["Road construction, earthworks & surfacing",r.direct-r.structs.reduce((s,x)=>s+x.cost,0)],...r.structs.map(s=>[`${s.type} (${s.A.toFixed(1)} km² catchment)`,s.cost])];
+  $("detail").innerHTML=`<div class="row" style="justify-content:space-between"><h3>${r.label}</h3>${r.best?'<span class="pill best">Recommended</span>':""}</div>
+    <p class="why">${why(r)}</p>
+    <div class="stats">
+      <div class="stat"><span class="k">Capital (central)</span><span class="v">${fmt$(r.mid)}</span><span class="s">${fmt$(r.low)} – ${fmt$(r.high)}</span></div>
+      <div class="stat"><span class="k">30-yr lifecycle</span><span class="v">${fmt$(r.lc)}</span><span class="s">O&amp;M ${fmt$(r.maintYr)}/yr</span></div>
+      <div class="stat"><span class="k">Per km</span><span class="v">${fmt$(r.mid/(r.len/1000))}</span><span class="s">${(r.len/1000).toFixed(1)} km</span></div>
+      <div class="stat"><span class="k">Opens (likely)</span><span class="v">${fmtD(r.sched.likely)}</span><span class="s">earliest ${fmtD(r.sched.earliest)}</span></div>
+      <div class="stat"><span class="k">Build seasons</span><span class="v">${r.sched.seasons}</span><span class="s">${r.months.toFixed(1)} crew-months, ${p.season}/yr window</span></div>
+      <div class="stat"><span class="k">Earthworks</span><span class="v">${Math.round((r.fill+r.cut)/1000).toLocaleString()}k m³</span><span class="s">max raise ${r.maxRaise.toFixed(1)} m</span></div>
+    </div>
+    <details><summary style="cursor:pointer;font-weight:600">Cost breakdown</summary><table class="lines"><tbody>
+      ${rows.map(x=>`<tr><td>${x[0]}</td><td class="n">${fmt$(x[1])}</td></tr>`).join("")}
+      <tr><td>Direct construction</td><td class="n">${fmt$(r.direct)}</td></tr>
+      <tr><td>+ mobilization 5%, traffic 4%, environment 3%, engineering 12%, surveys &amp; permits, contingency 40%, × site access ${p.remote}</td><td class="n"><b>${fmt$(r.mid)}</b></td></tr></tbody></table></details>`;
+  renderSched(r);
+}
+function renderSched(r){
+  const s=r.sched, total=Math.max(...results.map(x=>x.sched.total))+2, p=P();
+  const yrs=Math.ceil(total/12)+1, labels=[]; for(let k=0;k<=yrs;k+=Math.max(1,Math.ceil(yrs/6))) labels.push(p.start.getFullYear()+k);
+  $("schedCard").innerHTML=`<div class="row" style="justify-content:space-between"><h3>Schedule: ${r.label}</h3><span class="note">Planning estimate from a ${fmtD(p.start)} start · first traffic benefit ${fmtD(s.firstBenefit)} · delayed case ${fmtD(s.delayed)}</span></div>
+    <div class="gantt">${s.phases.map(ph=>`<div class="grow"><span>${ph.name}</span><div class="gtrack"><div class="gbar" style="left:${ph.start/total*100}%;width:${Math.max(.6,ph.dur/total*100)}%;background:${ph.build?css(r.color):"var(--muted)"};opacity:${ph.build?1:.55}"></div></div></div>`).join("")}
+    <div class="grow"><span><b>Compare options</b></span><span></span></div>
+    ${results.map(x=>`<div class="grow"><span>${x.label.replace("New route: ","")}</span><div class="gtrack"><div class="gbar" style="left:0;width:${x.sched.total/total*100}%;background:${css(x.color)}"></div></div></div>`).join("")}
+    <div class="gaxis"><span></span><div>${labels.map(l=>`<span>${l}</span>`).join("")}</div></div></div>
+    <p class="note">Design and consultation overlap; permits run alongside the second half of design. Construction starts in June and runs ${p.season} months a year; winters and spring breakup are off. Delayed case adds a missed season and 35% on approvals.</p>`;
+}
+
+/* --- export & projects --- */
+$("csvBtn").onclick=async()=>{
+  const q=v=>`"${String(v).replace(/"/g,'""')}"`;
+  const head=["option","recommended","length_km","crossings","bridges","floodplain_km","capital_low","capital_central","capital_high","om_per_year","lifecycle_30yr","build_seasons","opens_likely","opens_earliest","opens_delayed"];
+  const csv=[head.join(","),...results.map(r=>[r.label,r.best?"yes":"",(r.len/1000).toFixed(2),r.structs.length,r.bridges,r.floodKm.toFixed(2),...[r.low,r.mid,r.high,r.maintYr,r.lc].map(Math.round),r.sched.seasons,fmtD(r.sched.likely),fmtD(r.sched.earliest),fmtD(r.sched.delayed)].map(q).join(","))].join("\n");
+  const dl=window.claude? await claude.use("downloads").catch(()=>null):null;
+  if(dl){ try{ await dl.save({filename:"keepway-route-options.csv",data:csv}); toast("Saved keepway-route-options.csv"); return; }catch(e){ if(e&&e.code==="declined") return; } }
+  try{ await navigator.clipboard.writeText(csv); toast("Copied the options as CSV"); }catch(e){ toast("Couldn't save or copy here"); }
+};
+function snapshot(){ const p=P(); return {name:"",seed:TER.demo?+$("seed").value:null,A,B,roadClass:p.roadClass,designT:p.designT,clim:p.clim,remote:p.remote,season:p.season,start:$("startDate").value,
+  summary:results.map(r=>({label:r.label,best:!!r.best,km:+(r.len/1000).toFixed(2),central:Math.round(r.mid),opens:fmtD(r.sched.likely)}))}; }
+$("saveBtn").onclick=async()=>{
+  if(!db){ toast("Saving projects comes with team accounts in the hosted product. Export options works now."); return; }
+  if(!TER.demo){ toast("Projects on uploaded terrain aren't saved yet: the DEM stays in this browser"); return; }
+  const name=`Route study ${new Date().toLocaleDateString("en-CA")} ${new Date().toLocaleTimeString("en-CA",{hour:"2-digit",minute:"2-digit"})}`;
+  try{ await db.collection("projects").add({...snapshot(),name,savedAt:Date.now()}); toast("Saved: "+name); }catch(e){ toast(e&&e.code==="not_granted"?"You don't have edit access":"Couldn't save. Try again."); }
+};
+$("projectSel").onchange=()=>{ const pr=projects.find(x=>x.id===$("projectSel").value); if(!pr){ base=null; $("seed").value="7"; loadTerrain(demoTerrain(7),false); return; }
+  $("seed").value=String(pr.seed||7); $("roadClass").value=pr.roadClass; $("designT").value=String(pr.designT); $("climate").value=String(pr.clim); $("remote").value=String(pr.remote); $("season").value=pr.season; $("startDate").value=pr.start;
+  base=null; TER=demoTerrain(pr.seed||7); HY=hydrology(TER); A=pr.A; B=pr.B; loadTerrain(TER,true); };
+
+(async function boot(){
+  renderScen(); loadScenario(SCEN[0]);
+  if(!window.claude) return;
+  db=await claude.use("db"); if(!db) return;
+  db.collection("projects").onSnapshot(snap=>{ projects=snap.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.savedAt||0)-(a.savedAt||0));
+    const cur=$("projectSel").value; $("projectSel").innerHTML=`<option value="">Demo: northern access road</option>`+projects.map(p=>`<option value="${p.id}">${String(p.name).replace(/[<&"]/g,"")}</option>`).join(""); $("projectSel").value=cur; },()=>{});
+})();
+</script>
+
+</body></html>
