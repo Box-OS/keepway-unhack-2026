@@ -7,9 +7,7 @@
 - Sara Jeibar
 - Weijie Zhang
 - Noah Cho
-- Umaima
-- Farooq
-- Patoli
+- Umaima Farooq Patoli
 
 Prepared 2026-11-07. All costs are in 2026 CAD at AACE Class 5 / Class D accuracy (order of magnitude). Evidence classes: **Verified** (primary source checked), **Reported** (news, consultant or secondary source), **Estimated** (engineering calculation or judgment), **Unknown** (not found). **[ILLUSTRATIVE]** means an assumed value used only to demonstrate the method.
 
