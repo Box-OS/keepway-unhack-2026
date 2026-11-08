@@ -522,24 +522,35 @@ $("csvBtn").onclick=async()=>{
   const csv=[head.join(","),...results.map(r=>[r.label,r.best?"yes":"",(r.len/1000).toFixed(2),r.structs.length,r.bridges,r.floodKm.toFixed(2),...[r.low,r.mid,r.high,r.maintYr,r.lc].map(Math.round),r.sched.seasons,fmtD(r.sched.likely),fmtD(r.sched.earliest),fmtD(r.sched.delayed)].map(q).join(","))].join("\n");
   const dl=window.claude? await claude.use("downloads").catch(()=>null):null;
   if(dl){ try{ await dl.save({filename:"keepway-route-options.csv",data:csv}); toast("Saved keepway-route-options.csv"); return; }catch(e){ if(e&&e.code==="declined") return; } }
+  // plain browser (GitHub Pages, local file): download the CSV directly
+  try{ const url=URL.createObjectURL(new Blob([csv],{type:"text/csv"})); const a=document.createElement("a"); a.href=url; a.download="keepway-route-options.csv"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000); toast("Downloaded keepway-route-options.csv"); return; }catch(e){}
   try{ await navigator.clipboard.writeText(csv); toast("Copied the options as CSV"); }catch(e){ toast("Couldn't save or copy here"); }
 };
+// Outside a Claude artifact there is no shared db: keep saved projects in this browser instead.
+function localDb(){
+  const KEY="keepway.projects", subs=[];
+  const read=()=>{ try{ return JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ return []; } };
+  const emit=()=>{ const docs=read().map(d=>({id:d.id,data:()=>d})); subs.forEach(f=>f({docs})); };
+  return { local:true, collection:()=>({
+    add: async doc=>{ const all=read(); all.push({...doc,id:"p"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}); localStorage.setItem(KEY,JSON.stringify(all)); emit(); },
+    onSnapshot:(f)=>{ subs.push(f); emit(); return ()=>{}; } }) };
+}
 function snapshot(){ const p=P(); return {name:"",seed:TER.demo?+$("seed").value:null,A,B,roadClass:p.roadClass,designT:p.designT,clim:p.clim,remote:p.remote,season:p.season,start:$("startDate").value,
   summary:results.map(r=>({label:r.label,best:!!r.best,km:+(r.len/1000).toFixed(2),central:Math.round(r.mid),opens:fmtD(r.sched.likely)}))}; }
 $("saveBtn").onclick=async()=>{
   if(!db){ toast("Saving projects comes with team accounts in the hosted product. Export options works now."); return; }
   if(!TER.demo){ toast("Projects on uploaded terrain aren't saved yet: the DEM stays in this browser"); return; }
   const name=`Route study ${new Date().toLocaleDateString("en-CA")} ${new Date().toLocaleTimeString("en-CA",{hour:"2-digit",minute:"2-digit"})}`;
-  try{ await db.collection("projects").add({...snapshot(),name,savedAt:Date.now()}); toast("Saved: "+name); }catch(e){ toast(e&&e.code==="not_granted"?"You don't have edit access":"Couldn't save. Try again."); }
+  try{ await db.collection("projects").add({...snapshot(),name,savedAt:Date.now()}); toast("Saved: "+name+(db.local?" (in this browser)":"")); }catch(e){ toast(e&&e.code==="not_granted"?"You don't have edit access":"Couldn't save. Try again."); }
 };
 $("projectSel").onchange=()=>{ const pr=projects.find(x=>x.id===$("projectSel").value); if(!pr){ base=null; $("seed").value="7"; loadTerrain(demoTerrain(7),false); return; }
   $("seed").value=String(pr.seed||7); $("roadClass").value=pr.roadClass; $("designT").value=String(pr.designT); $("climate").value=String(pr.clim); $("remote").value=String(pr.remote); $("season").value=pr.season; $("startDate").value=pr.start;
-  base=null; TER=demoTerrain(pr.seed||7); HY=hydrology(TER); A=pr.A; B=pr.B; loadTerrain(TER,true); };
+  base=null; scen=null; renderScen(); TER=demoTerrain(pr.seed||7); TER.seed=pr.seed||7; HY=hydrology(TER); A=pr.A; B=pr.B; loadTerrain(TER,true); };
 
 (async function boot(){
   renderScen(); loadScenario(SCEN[0]);
-  if(!window.claude) return;
-  db=await claude.use("db"); if(!db) return;
+  if(window.claude){ try{ db=await claude.use("db"); }catch(e){ db=null; } }
+  if(!db){ try{ localStorage.setItem("keepway.t","1"); localStorage.removeItem("keepway.t"); db=localDb(); }catch(e){ return; } }
   db.collection("projects").onSnapshot(snap=>{ projects=snap.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.savedAt||0)-(a.savedAt||0));
     const cur=$("projectSel").value; $("projectSel").innerHTML=`<option value="">Demo: northern access road</option>`+projects.map(p=>`<option value="${p.id}">${String(p.name).replace(/[<&"]/g,"")}</option>`).join(""); $("projectSel").value=cur; },()=>{});
 })();
