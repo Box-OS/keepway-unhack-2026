@@ -23,6 +23,8 @@
   --accent:#3fb0b2; --accent-ink:#0b1514; --open:#3fb77a; --closed:#e0644c; --water:#6aa6d6;
   --o1:#3fb0b2; --o2:#f08a3e; --o3:#a68cf0; --o4:#6aa6d6; color-scheme:dark}
 *{box-sizing:border-box}
+/* the artifact wrapper used to supply this; without it .busy/.tip/.toast display rules beat the hidden attribute */
+[hidden]:not([hidden=until-found i]){display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.45}
 .wrap{max-width:1440px;margin:0 auto;padding-block:12px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:12px}
 .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
@@ -305,7 +307,7 @@ function schedule(r,P){
   phases.push({name:pre[4][0],start:pEnd,dur:pre[4][1]});
   const preEnd=pEnd+pre[4][1];
   const sm=P.season, seasons=Math.max(1,Math.ceil(r.months/sm));
-  const startMonth = P.start.getMonth(); // 0-based
+  const startMonth = isNaN(P.start) ? 0 : P.start.getMonth(); // 0-based; an invalid date would loop forever below
   const seasonStart = 5; // June
   let cs = preEnd; const absAt=m=>(startMonth+m)%12; while(absAt(cs)!==seasonStart) cs++;
   const constrCal=(seasons-1)*12+(r.months-(seasons-1)*sm);
@@ -328,7 +330,7 @@ const OPT_DEF=[
   {id:"short",obj:"short",label:"New route: shortest drive",sub:"Most direct line; pays for bigger crossings",color:"--o2"}
 ];
 let TER=null, HY=null, A=null, B=null, mode="A", results=[], sel="cost", oldPath=[], db=null, canWrite=false, projects=[];
-const P=()=>({roadClass:$("roadClass").value,designT:+$("designT").value,clim:+$("climate").value,remote:+$("remote").value,season:Math.min(9,Math.max(3,+$("season").value||5)),start:new Date($("startDate").value||"2027-01-04")});
+const P=()=>({roadClass:$("roadClass").value,designT:+$("designT").value,clim:+$("climate").value,remote:+$("remote").value,season:Math.min(9,Math.max(3,+$("season").value||5)),start:(d=>isNaN(d)?new Date("2027-01-04"):d)(new Date($("startDate").value||"2027-01-04"))});
 function toast(t){ const el=$("toast"); el.textContent=t; el.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>el.hidden=true,2600); }
 function css(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
 
